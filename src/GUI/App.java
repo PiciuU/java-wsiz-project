@@ -2,10 +2,12 @@ package GUI;
 
 import GUI.layouts.*;
 
-import javax.swing.JFrame;
-import javax.swing.WindowConstants;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class App extends JFrame {
+public class App extends JFrame implements ActionListener {
 
     /** Define Singleton */
     private static App instance;
@@ -48,6 +50,12 @@ public class App extends JFrame {
     /** Layout for specific parking */
     protected Authorized authorizedLayout;
 
+    /** Menu Bar */
+    protected JMenuBar menuBar;
+    protected JMenu fileMenu;
+    protected JMenuItem changeParkingItem;
+    protected JMenuItem exitItem;
+
     /**
      * Initialize GUI with default layout and custom properties
      *
@@ -56,19 +64,41 @@ public class App extends JFrame {
      * @param appHeight A height for application in pixels
      */
     private void init(String appName, int appWidth, int appHeight) {
-        defaultLayout = new Default(false);
-
         setTitle(appName);
         setSize(appWidth, appHeight);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+        renderMenuBar();
+        renderAuthorizedLayout(1);
+
         setVisible(true);
-
-        setContentPane(defaultLayout.getLayout());
-
     }
 
     /**
-     * Render default layout
+     * Render and mount menu bar to application
+     *
+     */
+    public void renderMenuBar() {
+        menuBar = new JMenuBar();
+
+        fileMenu = new JMenu("Plik");
+
+        changeParkingItem = new JMenuItem("Zmień parking");
+        exitItem = new JMenuItem("Wyjdź");
+
+        changeParkingItem.addActionListener(this);
+        exitItem.addActionListener(this);
+
+        fileMenu.add(changeParkingItem);
+        fileMenu.add(exitItem);
+
+        menuBar.add(fileMenu);
+
+        setJMenuBar(menuBar);
+    }
+
+    /**
+     * Render and mount default layout to application
      *
      * @param enableAddMode Define mode for layout
      */
@@ -82,7 +112,7 @@ public class App extends JFrame {
     }
 
     /**
-     * Render authorized layout for specific parking
+     * Render and mount layout for specific parking to application
      *
      * @param parkingId An id of parking lot
      */
@@ -95,4 +125,14 @@ public class App extends JFrame {
         getContentPane().repaint();
     }
 
+    /**
+     * Handle the requested action
+     *
+     * @param e ActionEvent
+     */
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == changeParkingItem) renderDefaultLayout(false);
+        else System.exit(0);
+    }
 }

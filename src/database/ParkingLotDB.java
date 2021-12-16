@@ -40,7 +40,6 @@ public class ParkingLotDB extends DBModel {
      * @exception Exception
      * @return ArrayList<ParkingLot>
      */
-    @Override
     public ArrayList<ParkingLot> getAll() {
         setConnection();
         ResultSet rs = get("SELECT * FROM parking_lot");
@@ -69,7 +68,6 @@ public class ParkingLotDB extends DBModel {
      * @exception Exception
      * @return ParkingLot
      */
-    @Override
     public ParkingLot getOne(int id) {
         setConnection();
         ResultSet rs = get("SELECT * FROM parking_lot WHERE id = " + id);
@@ -95,7 +93,6 @@ public class ParkingLotDB extends DBModel {
      * @param parkingName name of the parking
      * @param address address of the parking
      * @exception Exception
-     * @return ParkingLot
      */
     public void insertRecord(String parkingName, String address) {
         setConnection();
@@ -117,12 +114,12 @@ public class ParkingLotDB extends DBModel {
     /**
      * Update existing record in a parking_lot table
      *
+     * @param id id of the parking
      * @param parkingName name of the parking
      * @param address address of the parking
      * @exception Exception
-     * @return ParkingLot
      */
-    public void updateRecord(Integer id, String parkingName, String address) {
+    public void updateRecord(int id, String parkingName, String address) {
         setConnection();
 
         try {

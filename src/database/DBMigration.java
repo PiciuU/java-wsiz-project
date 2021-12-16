@@ -43,9 +43,10 @@ public abstract class DBMigration extends DBModel {
     private static void createParkingLotTable() {
         try {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking_lot (\n"
-                    + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + "	parking_name varchar(100) NOT NULL,\n"
-                    + "	address varchar(100) NOT NULL\n"
+                    + "	id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + "	parking_name TEXT NOT NULL,\n"
+                    + "	address TEXT NOT NULL,\n"
+                    + " UNIQUE(parking_name, address)\n"
                     + ") ");
         }
         catch (SQLException e) {
@@ -61,9 +62,10 @@ public abstract class DBMigration extends DBModel {
     private static void createParkingSlotTable() {
         try {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking_slot (\n"
-                    + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + "	parking_id integer NOT NULL,\n"
-                    + "	slot_number integer NOT NULL\n"
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + "parking_id INTEGER NOT NULL,\n"
+                    + "slot_number INTEGER NOT NULL,\n"
+                    + "UNIQUE(parking_id, slot_number)\n"
                     + ") ");
         }
         catch (SQLException e) {
@@ -79,10 +81,10 @@ public abstract class DBMigration extends DBModel {
     private static void createParkingSlotReservationTable() {
         try {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking_slot_reservation (\n"
-                    + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + "	vehicle_id integer NOT NULL,\n"
-                    + "	parking_slot_id integer NOT NULL,\n"
-                    + " reservation_date timestamp DEFAULT(CURRENT_TIMESTAMP)"
+                    + "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + "vehicle_id INTEGER NOT NULL UNIQUE,\n"
+                    + "parking_slot_id INTEGER NOT NULL UNIQUE,\n"
+                    + "reservation_date TEXT DEFAULT(datetime('now', 'localtime'))\n"
                     + ") ");
         }
         catch (SQLException e) {
@@ -98,13 +100,13 @@ public abstract class DBMigration extends DBModel {
     private static void createVehicleTable() {
         try {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS vehicle (\n"
-                    + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + "	customer_id integer NOT NULL,\n"
-                    + "	producer varchar(100) NOT NULL,\n"
-                    + "	model varchar(100) NOT NULL,\n"
-                    + " horsepower integer NOT NULL,\n"
-                    + "	production_year date NOT NULL,\n"
-                    + "	number_plate varchar(10) NOT NULL"
+                    + "	id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + "	customer_id INTEGER NOT NULL,\n"
+                    + "	producer TEXT NOT NULL,\n"
+                    + "	model TEXT NOT NULL,\n"
+                    + " horsepower INTEGER NOT NULL,\n"
+                    + "	production_year TEXT NOT NULL,\n"
+                    + "	number_plate TEXT NOT NULL"
                     + ") ");
         }
         catch (SQLException e) {
@@ -120,10 +122,10 @@ public abstract class DBMigration extends DBModel {
     private static void createCustomerTable() {
         try {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS customer (\n"
-                    + "	id integer PRIMARY KEY AUTOINCREMENT,\n"
-                    + "	firstname varchar(100) NOT NULL,\n"
-                    + "	surname varchar(100) NOT NULL,\n"
-                    + "	contact_number varchar(9) DEFAULT(NULL)\n"
+                    + "	id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
+                    + "	firstname TEXT NOT NULL,\n"
+                    + "	surname TEXT NOT NULL,\n"
+                    + "	contact_number TEXT DEFAULT(NULL)\n"
                     + ") ");
         }
         catch (SQLException e) {

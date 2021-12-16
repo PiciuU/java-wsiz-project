@@ -10,14 +10,16 @@ import database.ParkingLotDB;
 import modules.ParkingLot;
 
 import GUI.App;
-import GUI.LayoutManager;
+import GUI.GUIManager;
 
-public class Default extends LayoutManager implements ActionListener {
+public class Default extends GUIManager implements ActionListener {
 
     /** ArrayList containing existing parking lots */
     protected ArrayList<ParkingLot> parkingLots;
 
     /** GUI */
+
+    private GridLayout gridLayout;
 
     private JPanel layout;
     private JPanel currentView;
@@ -68,44 +70,45 @@ public class Default extends LayoutManager implements ActionListener {
      *
      */
     public void buildAddParkingView() {
+        gridLayout = new GridLayout();
         currentView = new JPanel();
-        currentView.setLayout(new GridBagLayout());
+        currentView.setLayout(gridLayout);
 
         parkingLabel = new JLabel("Dodaj nowy parking: ", SwingConstants.CENTER);
-        setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
-        currentView.add(parkingLabel, getConstraints());
+        gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
+        currentView.add(parkingLabel, gridLayout.getConstraints());
 
         parkingNameLabel = new JLabel("Nazwa parkingu: ", SwingConstants.LEFT);
-        setConstraints(0, 1, 1);
-        currentView.add(parkingNameLabel, getConstraints());
+        gridLayout.setConstraints(0, 1, 1);
+        currentView.add(parkingNameLabel, gridLayout.getConstraints());
 
         parkingNameInput = new JTextField();
         parkingNameInput.setPreferredSize(new Dimension(150, 25));
-        setConstraints(1, 1);
-        currentView.add(parkingNameInput, getConstraints());
+        gridLayout.setConstraints(1, 1);
+        currentView.add(parkingNameInput, gridLayout.getConstraints());
 
         parkingAddressLabel = new JLabel("Adres parkingu: ", SwingConstants.LEFT);
-        setConstraints(0, 2);
-        currentView.add(parkingAddressLabel, getConstraints());
+        gridLayout.setConstraints(0, 2);
+        currentView.add(parkingAddressLabel, gridLayout.getConstraints());
 
         parkingAddressInput = new JTextField();
         parkingAddressInput.setPreferredSize(new Dimension(150, 25));
-        setConstraints(1, 2);
-        currentView.add(parkingAddressInput, getConstraints());
+        gridLayout.setConstraints(1, 2);
+        currentView.add(parkingAddressInput, gridLayout.getConstraints());
 
         parkingButton = new JButton("Dodaj");
         parkingButton.putClientProperty("operation", "ADD");
         parkingButton.addActionListener(this);
-        setConstraints(0, 3, 2, new Insets(20,0,0,0));
-        currentView.add(parkingButton, getConstraints());
+        gridLayout.setConstraints(0, 3, 2, new Insets(20,0,0,0));
+        currentView.add(parkingButton, gridLayout.getConstraints());
 
-        if (!parkingLots.isEmpty()) {
+        // if (!parkingLots.isEmpty()) {
             actionButton = new JButton("Wróć do listy parkingów");
             actionButton.putClientProperty("operation", "SELECT_MODE");
             actionButton.addActionListener(this);
-            setConstraints(0, 3, new Insets(100, 0, 0, 0));
-            currentView.add(actionButton, getConstraints());
-        }
+            gridLayout.setConstraints(0, 3, new Insets(100, 0, 0, 0));
+            currentView.add(actionButton, gridLayout.getConstraints());
+        // }
     }
 
     /**
@@ -113,32 +116,33 @@ public class Default extends LayoutManager implements ActionListener {
      *
      */
     public void buildSelectParkingView() {
+        gridLayout = new GUIManager.GridLayout();
         currentView = new JPanel();
-        currentView.setLayout(new GridBagLayout());
+        currentView.setLayout(gridLayout);
 
         parkingLabel = new JLabel("Wybierz parking, którym chcesz zarządzać: ", SwingConstants.CENTER);
-        setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
-        currentView.add(parkingLabel, getConstraints());
+        gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
+        currentView.add(parkingLabel, gridLayout.getConstraints());
 
         parkingBox = new JComboBox();
         for (ParkingLot parking : parkingLots) {
             parkingBox.addItem(parking.getParkingName());
         }
 
-        setConstraints(0, 1);
-        currentView.add(parkingBox, getConstraints());
+        gridLayout.setConstraints(0, 1);
+        currentView.add(parkingBox, gridLayout.getConstraints());
 
         parkingButton = new JButton("Zatwierdź");
         parkingButton.putClientProperty("operation", "SELECT");
         parkingButton.addActionListener(this);
-        setConstraints(0, 2);
-        currentView.add(parkingButton, getConstraints());
+        gridLayout.setConstraints(0, 2);
+        currentView.add(parkingButton, gridLayout.getConstraints());
 
         actionButton = new JButton("Dodaj nowy parking");
         actionButton.putClientProperty("operation", "ADD_MODE");
         actionButton.addActionListener(this);
-        setConstraints(0, 3, new Insets(100,0,0,0));
-        currentView.add(actionButton, getConstraints());
+        gridLayout.setConstraints(0, 3, new Insets(100,0,0,0));
+        currentView.add(actionButton, gridLayout.getConstraints());
     }
     /**
      * Handle the requested action

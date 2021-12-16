@@ -139,8 +139,13 @@ public abstract class DBModel {
         }
     }
 
-    /** Abstract methods */
-    protected abstract ArrayList<?> getAll();
-    protected abstract Object getOne(int id);
+    /** Mandatory methods to be overwritten */
+
+    public ArrayList<?> getAll() {
+        throw new RuntimeException("Method not overwritten");
+    };
+    public Object getOne() { throw new RuntimeException("Method not overwritten"); };
+    public void insertRecord() { throw new RuntimeException("Method not overwritten"); };
+    public void updateRecord() { throw new RuntimeException("Method not overwritten"); };
 
 }

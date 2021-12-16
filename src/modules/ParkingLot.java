@@ -36,6 +36,11 @@ public class ParkingLot extends Model {
         setValues(id, parkingName, address);
     }
 
+    public ParkingLot(int id, String parkingName, String address, String customField) {
+        setValues(id, parkingName, address);
+        setCustomField(customField);
+    }
+
     /* Methods */
 
     public void setValues(int id, String parkingName, String address) {
