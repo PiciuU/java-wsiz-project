@@ -1,14 +1,14 @@
-package GUI.components;
+package gui.components;
 
-import GUI.GUIManager;
-import GUI.layouts.Authorized;
+import gui.GUIManager;
 
-import database.ParkingSlotReservationDB;
-import database.ParkingSlotDB;
-import database.VehicleDB;
+import database.controllers.ParkingSlotReservationController;
+import database.controllers.ParkingSlotController;
+import database.controllers.VehicleController;
 
-import modules.ParkingSlotReservation;
-import modules.Vehicle;
+import models.ParkingSlot;
+import models.ParkingSlotReservation;
+import models.Vehicle;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -24,7 +24,7 @@ public class SlotDetails extends GUIManager implements ActionListener {
 
     protected ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation();
 
-    protected int slotId;
+    protected ParkingSlot slot;
     protected Boolean isOccupied;
     protected Vehicle chosenVehicle;
 
@@ -32,7 +32,7 @@ public class SlotDetails extends GUIManager implements ActionListener {
 
     private JFrame _frame;
     private JLabel _label;
-    private JTextField _input;
+    private JTextField _textField;
     private JButton _button;
     private JLabel _error;
 
@@ -42,10 +42,10 @@ public class SlotDetails extends GUIManager implements ActionListener {
         renderCreateModal();
     }
 
-    public SlotDetails(EventHandler customEvent, String modalTitle, int slotId, int isOccupied) {
+    public SlotDetails(EventHandler customEvent, String modalTitle, ParkingSlot slot) {
         this.customEvent = customEvent;
-        this.slotId = slotId;
-        this.isOccupied = (isOccupied != 0);
+        this.slot = slot;
+        this.isOccupied = (Integer.parseInt(slot.getCustomField()) != 0);
         this.chosenVehicle = new Vehicle();
         renderFrame(modalTitle);
 
@@ -89,11 +89,11 @@ public class SlotDetails extends GUIManager implements ActionListener {
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
-        /* Input */
-        _input = new JTextField();
-        _input.setPreferredSize(new Dimension(50, 25));
+        /* TextField */
+        _textField = new JTextField();
+        _textField.setPreferredSize(new Dimension(50, 25));
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
-        _frame.add(_input, gridLayout.getConstraints());
+        _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
         _button = new JButton("Dodaj");
@@ -109,7 +109,7 @@ public class SlotDetails extends GUIManager implements ActionListener {
      */
     public void renderEditModal() {
         /* Label */
-        _label = new JLabel("Miejsce parkingowe nr " + slotId + ": ", SwingConstants.CENTER);
+        _label = new JLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 3);
         _frame.add(_label, gridLayout.getConstraints());
 
@@ -118,12 +118,12 @@ public class SlotDetails extends GUIManager implements ActionListener {
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
-        /* Input */
-        _input = new JTextField();
-        _input.setPreferredSize(new Dimension(150, 25));
-        _input.setEditable(false);
+        /* TextField */
+        _textField = new JTextField();
+        _textField.setPreferredSize(new Dimension(150, 25));
+        _textField.setEditable(false);
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
-        _frame.add(_input, gridLayout.getConstraints());
+        _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
         _button = new JButton("wybierz...");
@@ -145,11 +145,11 @@ public class SlotDetails extends GUIManager implements ActionListener {
      *
      */
     public void renderDeleteModal() {
-        parkingSlotReservation = ParkingSlotReservationDB.getInstance().getOne(slotId);
-        Vehicle vehicle = VehicleDB.getInstance().getOne(parkingSlotReservation.getVehicleId());
+        parkingSlotReservation = ParkingSlotReservationController.getInstance().getOne(slot.getId());
+        Vehicle vehicle = VehicleController.getInstance().getOne(parkingSlotReservation.getVehicleId());
 
         /* Label */
-        _label = new JLabel("Miejsce parkingowe nr " + slotId + ": ", SwingConstants.CENTER);
+        _label = new JLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 3);
         _frame.add(_label, gridLayout.getConstraints());
 
@@ -158,13 +158,13 @@ public class SlotDetails extends GUIManager implements ActionListener {
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
-        /* Input */
-        _input = new JTextField();
-        _input.setPreferredSize(new Dimension(150, 25));
-        _input.setEditable(false);
-        _input.setText(vehicle.getProducer() + " " + vehicle.getModel() + " - " + vehicle.getNumberPlate());
+        /* TextField */
+        _textField = new JTextField();
+        _textField.setPreferredSize(new Dimension(150, 25));
+        _textField.setEditable(false);
+        _textField.setText(vehicle.getProducer() + " " + vehicle.getModel() + " - " + vehicle.getNumberPlate());
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
-        _frame.add(_input, gridLayout.getConstraints());
+        _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
         _button = new JButton("Wyparkuj");
@@ -184,29 +184,29 @@ public class SlotDetails extends GUIManager implements ActionListener {
         String action = e.getActionCommand();
 
         if (action.equals("addSlot")) {
-            if (_input.getText().isEmpty()) {
+            if (_textField.getText().isEmpty()) {
                 throwVisibleError("Numer miejsca parkingowego nie może być pusty!");
                 return;
             }
-            ParkingSlotDB.getInstance().insertRecord(Authorized.parkingId, Integer.parseInt(_input.getText()));
+            ParkingSlotController.getInstance().insertRecord(getEnv().getParkingId(), _textField.getText());
         }
         else if (action.equals("chooseVehicle")) {
-            new VehicleList(new CustomEvent());
+            new VehicleListModal(new CustomEvent(), true);
             return;
         }
         else if (action.equals("addSlotReservation")) {
-            if (chosenVehicle.isEmpty() || _input.getText().isEmpty() ) {
+            if (chosenVehicle.isEmpty() || _textField.getText().isEmpty() ) {
                 throwVisibleError("Aby przejść dalej należy wybrać pojazd!");
                 return;
             }
-            ParkingSlotReservationDB.getInstance().insertRecord(chosenVehicle.getId(), slotId, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC).format(Instant.now()));
+            ParkingSlotReservationController.getInstance().insertRecord(chosenVehicle.getId(), slot.getId(), DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneOffset.UTC).format(Instant.now()));
         }
         else if (action.equals("deleteSlotReservation")) {
             if(parkingSlotReservation.isEmpty()) {
                 throwVisibleError("Podane miejsce parkingowe nie jest zajęte!");
                 return;
             }
-            ParkingSlotReservationDB.getInstance().deleteRecord(parkingSlotReservation.getId());
+            ParkingSlotReservationController.getInstance().deleteRecord(parkingSlotReservation.getId());
         }
 
         customEvent.disposeFrame(_frame);
@@ -238,7 +238,7 @@ public class SlotDetails extends GUIManager implements ActionListener {
         @Override
         public void handleSelect(Object object) {
             chosenVehicle = (Vehicle) object;
-            _input.setText(chosenVehicle.getProducer() + " " + chosenVehicle.getModel() + " - " + chosenVehicle.getNumberPlate());
+            _textField.setText(chosenVehicle.getProducer() + " " + chosenVehicle.getModel() + " - " + chosenVehicle.getNumberPlate());
         }
     }
 }

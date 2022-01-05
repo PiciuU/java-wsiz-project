@@ -1,11 +1,10 @@
-package GUI.components;
+package gui.components;
 
-import GUI.GUIManager;
-import GUI.layouts.Authorized;
+import gui.GUIManager;
 
-import database.ParkingSlotDB;
+import database.controllers.ParkingSlotController;
 
-import modules.ParkingSlot;
+import models.ParkingSlot;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -32,9 +31,9 @@ public class Slots extends GUIManager implements ActionListener {
         return _scrollPane;
     }
 
-    public Slots(EventHandler CustomEvent) {
-        this.customEvent = CustomEvent;
-        parkingSlotsData = ParkingSlotDB.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + Authorized.parkingId);
+    public Slots(EventHandler customEvent) {
+        this.customEvent = customEvent;
+        parkingSlotsData = ParkingSlotController.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId());
         renderPanel();
     }
 
@@ -82,7 +81,7 @@ public class Slots extends GUIManager implements ActionListener {
             new SlotDetails(customEvent, "Kreator miejsca parkingowego");
         }
         else {
-            new SlotDetails(customEvent, "Miejsce parkingowe nr " + slot.getId(), slot.getId(), Integer.parseInt(slot.getCustomField()));
+            new SlotDetails(customEvent, "Miejsce parkingowe nr " + slot.getSlotNumber(), slot);
         }
     }
 }

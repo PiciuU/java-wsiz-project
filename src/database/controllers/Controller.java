@@ -1,12 +1,13 @@
-package database;
+package database.controllers;
 
 import java.sql.*;
 import java.util.ArrayList;
 
-/** An abstract class for Singleton Objects that are to be used as database models.
- * @author Patryk Strzałka
+/**
+ * An abstract class for Singleton Objects that are to be used as database models.
+ *
  */
-public abstract class DBModel {
+public abstract class Controller {
     /** Absolute path to SQLite database */
     private static final String DB_URL = "jdbc:sqlite:src/database/db.sqlite";
 
@@ -57,7 +58,7 @@ public abstract class DBModel {
             db = connection.createStatement();
         }
         catch (SQLException e) {
-            System.err.println("[DBModel] Error establishing a database connection: " + e.getMessage());
+            System.err.println("[Controller] Error establishing a database connection: " + e.getMessage());
         }
     }
 
@@ -71,7 +72,7 @@ public abstract class DBModel {
             connection.close();
             connection = null;
         } catch (SQLException e) {
-            System.err.println("[DBModel] Unable to close a database connection: "+ e.getMessage());
+            System.err.println("[Controller] Unable to close a database connection: "+ e.getMessage());
         }
     }
 
@@ -87,7 +88,7 @@ public abstract class DBModel {
             return db.executeQuery(query);
         }
         catch (SQLException e) {
-            System.out.println("[DBModel::get] SQLException: " + e.getMessage());
+            System.out.println("[Controller::get] SQLException: " + e.getMessage());
             return null;
         }
     }
@@ -105,7 +106,7 @@ public abstract class DBModel {
             if (rs.next()) lastInsertedId = rs.getInt(1);
         }
         catch(SQLException e) {
-            System.out.println("[DBModel::insert] SQLException: " + e.getMessage());
+            System.out.println("[Controller::insert] SQLException: " + e.getMessage());
         }
     }
 
@@ -120,7 +121,7 @@ public abstract class DBModel {
              stmt.executeUpdate();
          }
          catch(SQLException e) {
-             System.out.println("[DBModel::update] SQLException: " + e.getMessage());
+             System.out.println("[Controller::update] SQLException: " + e.getMessage());
          }
     }
 
@@ -135,7 +136,7 @@ public abstract class DBModel {
             stmt.executeUpdate();
         }
         catch(SQLException e) {
-            System.out.println("[DBModel::delete] SQLException: " + e.getMessage());
+            System.out.println("[Controller::delete] SQLException: " + e.getMessage());
         }
     }
 
@@ -147,5 +148,9 @@ public abstract class DBModel {
     public Object getOne() { throw new RuntimeException("Method not overwritten"); };
     public void insertRecord() { throw new RuntimeException("Method not overwritten"); };
     public void updateRecord() { throw new RuntimeException("Method not overwritten"); };
+    public void deleteRecord() { throw new RuntimeException("Method not overwritten"); };
+    public ArrayList<?> getCustom() { throw new RuntimeException("Method not overwritten"); };
+    public Object getCustomOne() { throw new RuntimeException("Method not overwritten"); };
+
 
 }

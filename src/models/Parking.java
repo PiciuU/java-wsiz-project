@@ -1,6 +1,6 @@
-package modules;
+package models;
 
-public class ParkingLot extends Model {
+public class Parking extends Model {
 
     /* Fields */
 
@@ -27,21 +27,27 @@ public class ParkingLot extends Model {
 
     /* Constructors */
 
-    public ParkingLot() {
+    public Parking() {
         parkingName = "undefined";
         address = "undefined";
     }
 
-    public ParkingLot(int id, String parkingName, String address) {
+    public Parking(int id, String parkingName, String address) {
         setValues(id, parkingName, address);
     }
 
-    public ParkingLot(int id, String parkingName, String address, String customField) {
-        setValues(id, parkingName, address);
-        setCustomField(customField);
+    public Parking(int id, String parkingName, String address, String customField) {
+        setValues(id, parkingName, address, customField);
     }
 
     /* Methods */
+
+    public void setValues(int id, String parkingName, String address, String customField) {
+        setId(id);
+        this.parkingName = parkingName;
+        this.address = address;
+        setCustomField(customField);
+    }
 
     public void setValues(int id, String parkingName, String address) {
         setId(id);

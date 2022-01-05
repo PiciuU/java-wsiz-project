@@ -1,23 +1,23 @@
-package database;
+package database.controllers;
 
-import modules.ParkingSlot;
+import models.ParkingSlot;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ParkingSlotDB extends DBModel {
+public class ParkingSlotController extends Controller {
 
     /** Define Singleton */
-    private static ParkingSlotDB instance;
+    private static ParkingSlotController instance;
 
     /**
      * Constructor to prevent creating new instance
      *
      * @exception IllegalStateException
      */
-    private ParkingSlotDB() {
+    private ParkingSlotController() {
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, use getInstance method instead.");
         }
@@ -26,10 +26,10 @@ public class ParkingSlotDB extends DBModel {
     /**
      * Get instance of an object
      *
-     * @return ParkingLotDB
+     * @return ParkingController
      */
-    public static ParkingSlotDB getInstance() {
-        if (instance == null) instance = new ParkingSlotDB();
+    public static ParkingSlotController getInstance() {
+        if (instance == null) instance = new ParkingSlotController();
         return instance;
     }
 
@@ -47,7 +47,7 @@ public class ParkingSlotDB extends DBModel {
         ArrayList<ParkingSlot> parkingSlotList = new ArrayList<ParkingSlot>();
         try {
             while (rs.next()) {
-                ParkingSlot parkingSlot = new ParkingSlot(rs.getInt("id"), rs.getInt("parking_id"), rs.getInt("slot_number"));
+                ParkingSlot parkingSlot = new ParkingSlot(rs.getInt("id"), rs.getInt("parking_id"), rs.getString("slot_number"));
                 parkingSlotList.add(parkingSlot);
             }
         }
@@ -75,7 +75,7 @@ public class ParkingSlotDB extends DBModel {
         ParkingSlot parkingSlot = new ParkingSlot();
 
         try {
-            parkingSlot.setValues(rs.getInt("id"), rs.getInt("parking_id"), rs.getInt("slot_number"));
+            parkingSlot.setValues(rs.getInt("id"), rs.getInt("parking_id"), rs.getString("slot_number"));
         }
         catch(Exception e) {
             System.out.println(e);
@@ -90,17 +90,17 @@ public class ParkingSlotDB extends DBModel {
     /**
      * Insert new record into a parking_slot table
      *
-     * @param parking_id id of the parking lot
-     * @param slot_number number of the parking slot
+     * @param parkingId id of the parking lot
+     * @param slotNumber number of the parking slot
      * @exception Exception
      */
-    public void insertRecord(int parking_id, int slot_number) {
+    public void insertRecord(int parkingId, String slotNumber) {
         setConnection();
 
         try {
             PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO parking_slot(parking_id, slot_number) VALUES(?, ?)");
-            prepareStatement.setInt(1, parking_id);
-            prepareStatement.setInt(2, slot_number);
+            prepareStatement.setInt(1, parkingId);
+            prepareStatement.setString(2, slotNumber);
             insert(prepareStatement);
         }
         catch (SQLException e) {
@@ -115,17 +115,17 @@ public class ParkingSlotDB extends DBModel {
      * Update existing record in a parking_slot table
      *
      * @param id id of the parking slot
-     * @param parking_id id of the parking
-     * @param slot_number number of the parking slot
+     * @param parkingId id of the parking
+     * @param slotNumber number of the parking slot
      * @exception Exception
      */
-    public void updateRecord(int id, int parking_id, int slot_number) {
+    public void updateRecord(int id, int parkingId, String slotNumber) {
         setConnection();
 
         try {
             PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE parking_slot SET parking_id = ?, slot_number = ? WHERE id = ?");
-            prepareStatement.setInt(1, parking_id);
-            prepareStatement.setInt(2, slot_number);
+            prepareStatement.setInt(1, parkingId);
+            prepareStatement.setString(2, slotNumber);
             prepareStatement.setInt(3, id);
 
             update(prepareStatement);
@@ -138,6 +138,28 @@ public class ParkingSlotDB extends DBModel {
         }
     }
 
+    /**
+     * Delete existing record in a parking slot table
+     *
+     * @param id id of the parking slot
+     * @exception Exception
+     */
+    public void deleteRecord(int id) {
+        setConnection();
+
+        try {
+            PreparedStatement prepareStatement = getConnection().prepareStatement("DELETE FROM parking_slot WHERE id = ?");
+            prepareStatement.setInt(1, id);
+
+            delete(prepareStatement);
+        }
+        catch (SQLException e) {
+            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+        }
+        finally {
+            closeConnection();
+        }
+    }
 
     public ArrayList<ParkingSlot> getCustom(String query) {
         setConnection();
@@ -146,7 +168,7 @@ public class ParkingSlotDB extends DBModel {
         ArrayList<ParkingSlot> parkingSlotList = new ArrayList<ParkingSlot>();
         try {
             while (rs.next()) {
-                ParkingSlot parkingSlot = new ParkingSlot(rs.getInt("id"), rs.getInt("parking_id"), rs.getInt("slot_number"), rs.getString("custom_field"));
+                ParkingSlot parkingSlot = new ParkingSlot(rs.getInt("id"), rs.getInt("parking_id"), rs.getString("slot_number"), rs.getString("custom_field"));
                 parkingSlotList.add(parkingSlot);
             }
         }
@@ -158,6 +180,25 @@ public class ParkingSlotDB extends DBModel {
         }
 
         return parkingSlotList;
+    }
+
+    public ParkingSlot getCustomOne(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        ParkingSlot parkingSlot = new ParkingSlot();
+
+        try {
+            parkingSlot.setValues(rs.getInt("id"), rs.getInt("parking_id"), rs.getString("slot_number"), rs.getString("custom_field"));
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return parkingSlot;
     }
 
 }

@@ -1,22 +1,21 @@
-package GUI.components;
+package gui.components;
 
-import GUI.GUIManager;
+import database.controllers.CustomerController;
 
-import database.VehicleDB;
+import gui.GUIManager;
+import models.Customer;
 
-import modules.Vehicle;
-
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import javax.swing.*;
 
-public class VehicleList extends GUIManager implements ActionListener {
+public class CustomerListModal extends GUIManager implements ActionListener {
 
     private EventHandler customEvent;
 
-    private ArrayList<Vehicle> vehiclesData;
+    private ArrayList<Customer> customersData;
 
     private GridLayout gridLayout;
 
@@ -28,22 +27,22 @@ public class VehicleList extends GUIManager implements ActionListener {
     private JButton _button;
     private JLabel _error;
 
-    public VehicleList(EventHandler customEvent) {
+    public CustomerListModal(EventHandler customEvent) {
         this.customEvent = customEvent;
-        vehiclesData = VehicleDB.getInstance().getAll();
+        customersData = CustomerController.getInstance().getAll();
         renderFrame();
         renderContent();
     }
 
     /**
-     * Render and mount frame for available vehicles
+     * Render and mount frame for available customers
      *
      */
     public void renderFrame() {
         gridLayout = new GridLayout();
         _frame = new JFrame();
         _frame.setLayout(gridLayout);
-        _frame.setTitle("Lista pojazdów");
+        _frame.setTitle("Lista klientów");
         _frame.setSize(400, 400);
         _frame.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         _frame.setResizable(false);
@@ -59,8 +58,8 @@ public class VehicleList extends GUIManager implements ActionListener {
         _listModel = new DefaultListModel();
         _list = new JList(_listModel);
 
-        for(Vehicle vehicle : vehiclesData) {
-            _listModel.addElement(vehicle.getProducer() + " " + vehicle.getModel() + " - " + vehicle.getNumberPlate());
+        for(Customer customer : customersData) {
+            _listModel.addElement(customer.getFirstname() + " " + customer.getSurname());
         }
 
         /* ScrollPane */
@@ -72,7 +71,7 @@ public class VehicleList extends GUIManager implements ActionListener {
         /* Button */
         _button = new JButton("Wybierz");
         _button.addActionListener(this);
-        _button.setActionCommand("chooseVehicle");
+        _button.setActionCommand("chooseCustomer");
         _button.setPreferredSize(new Dimension(250, 50));
         gridLayout.setConstraints(0, 1, new Insets(20, 0, 0, 0));
         _frame.add(_button, gridLayout.getConstraints());
@@ -87,12 +86,12 @@ public class VehicleList extends GUIManager implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        if (action.equals("chooseVehicle")) {
+        if (action.equals("chooseCustomer")) {
             if (_list.getSelectedIndex() == -1) {
-                throwVisibleError("Aby przejść dalej pojazd musi być wybrany!");
+                throwVisibleError("Aby przejść dalej klient musi być wybrany!");
                 return;
             }
-            customEvent.handleSelect(vehiclesData.get(_list.getSelectedIndex()));
+            customEvent.handleSelect(customersData.get(_list.getSelectedIndex()));
             _frame.dispose();
         }
     }

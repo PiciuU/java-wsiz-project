@@ -1,23 +1,23 @@
-package database;
+package database.controllers;
 
-import modules.ParkingSlotReservation;
+import models.ParkingSlotReservation;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class ParkingSlotReservationDB extends DBModel {
+public class ParkingSlotReservationController extends Controller {
 
     /** Define Singleton */
-    private static ParkingSlotReservationDB instance;
+    private static ParkingSlotReservationController instance;
 
     /**
      * Constructor to prevent creating new instance
      *
      * @exception IllegalStateException
      */
-    private ParkingSlotReservationDB() {
+    private ParkingSlotReservationController() {
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, use getInstance method instead.");
         }
@@ -26,10 +26,10 @@ public class ParkingSlotReservationDB extends DBModel {
     /**
      * Get instance of an object
      *
-     * @return ParkingLotDB
+     * @return ParkingController
      */
-    public static ParkingSlotReservationDB getInstance() {
-        if (instance == null) instance = new ParkingSlotReservationDB();
+    public static ParkingSlotReservationController getInstance() {
+        if (instance == null) instance = new ParkingSlotReservationController();
         return instance;
     }
 
@@ -47,7 +47,7 @@ public class ParkingSlotReservationDB extends DBModel {
         ArrayList<ParkingSlotReservation> parkingSlotReservationList = new ArrayList<ParkingSlotReservation>();
         try {
             while (rs.next()) {
-                ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getTimestamp("reservation_date"));
+                ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getString("reservation_date"));
                 parkingSlotReservationList.add(parkingSlotReservation);
             }
         }
@@ -75,7 +75,7 @@ public class ParkingSlotReservationDB extends DBModel {
         ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation();
 
         try {
-            parkingSlotReservation.setValues(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getTimestamp("reservation_date"));
+            parkingSlotReservation.setValues(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getString("reservation_date"));
         }
         catch(Exception e) {
             System.out.println(e);
@@ -88,7 +88,7 @@ public class ParkingSlotReservationDB extends DBModel {
     }
 
     /**
-     * Insert new record into a parking_slot table
+     * Insert new record into a parking_slot_reservation table
      *
      * @param vehicle_id id of the vehicle
      * @param parking_slot_id id of the parking slot
@@ -114,7 +114,7 @@ public class ParkingSlotReservationDB extends DBModel {
     }
 
     /**
-     * Update existing record in a parking_slot table
+     * Update existing record in a parking_slot_reservation table
      *
      * @param id id of the parking slot reservation
      * @param vehicle_id id of the vehicle
@@ -143,7 +143,7 @@ public class ParkingSlotReservationDB extends DBModel {
     }
 
     /**
-     * Delete existing record in a parking_slot table
+     * Delete existing record in a parking_slot_reservation table
      *
      * @param id id of the parking slot reservation
      * @exception Exception
@@ -163,6 +163,46 @@ public class ParkingSlotReservationDB extends DBModel {
         finally {
             closeConnection();
         }
+    }
+
+    public ArrayList<ParkingSlotReservation> getCustom(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        ArrayList<ParkingSlotReservation> parkingSlotReservationList = new ArrayList<ParkingSlotReservation>();
+        try {
+            while (rs.next()) {
+                ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getString("reservation_date"));
+                parkingSlotReservationList.add(parkingSlotReservation);
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return parkingSlotReservationList;
+    }
+
+    public ParkingSlotReservation getCustomOne(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        ParkingSlotReservation parkingSlotReservation = new ParkingSlotReservation();
+
+        try {
+            parkingSlotReservation.setValues(rs.getInt("id"), rs.getInt("vehicle_id"), rs.getInt("parking_slot_id"), rs.getString("reservation_date"));
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return parkingSlotReservation;
     }
 
 }

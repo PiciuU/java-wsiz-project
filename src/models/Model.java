@@ -1,4 +1,4 @@
-package modules;
+package models;
 
 public abstract class Model {
     private int id;
@@ -20,13 +20,11 @@ public abstract class Model {
         this.customField = customField;
     }
 
-    // DEPRECATED
-//    public String getType(Object obj) {
-//        if (obj instanceof String) return "String";
-//        else if (obj instanceof Integer) return "Int";
-//        else return "Object";
-//    }
-
     public abstract String toString();
     public abstract Boolean isEmpty();
+
+    /** Mandatory methods to be overwritten */
+
+    public void setValues() { throw new RuntimeException("Method not overwritten"); };
+    public void updateValues() { throw new RuntimeException("Method not overwritten"); };
 }

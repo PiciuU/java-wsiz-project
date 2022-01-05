@@ -1,4 +1,4 @@
-package modules;
+package models;
 
 public class Customer extends Model {
     /* Fields */
@@ -46,11 +46,18 @@ public class Customer extends Model {
     }
 
     public Customer(int id, String firstname, String surname, String contactNumber, String customField) {
-        setValues(id, firstname, surname, contactNumber);
-        setCustomField(customField);
+        setValues(id, firstname, surname, contactNumber, customField);
     }
 
     /* Methods */
+
+    public void setValues(int id, String firstname, String surname, String contactNumber, String customField) {
+        setId(id);
+        this.firstname = firstname;
+        this.surname = surname;
+        this.contactNumber = contactNumber;
+        setCustomField(customField);
+    }
 
     public void setValues(int id, String firstname, String surname, String contactNumber) {
         setId(id);

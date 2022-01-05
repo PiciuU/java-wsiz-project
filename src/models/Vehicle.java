@@ -1,6 +1,4 @@
-package modules;
-
-import java.sql.Date;
+package models;
 
 public class Vehicle extends Model {
     /* Fields */
@@ -9,7 +7,7 @@ public class Vehicle extends Model {
     private String producer;
     private String model;
     private int horsepower;
-    private Date productionYear;
+    private String productionYear;
     private String numberPlate;
 
     /* Getters & Setters */
@@ -46,11 +44,11 @@ public class Vehicle extends Model {
         this.horsepower = horsepower;
     }
 
-    public Date getProductionYear() {
+    public String getProductionYear() {
         return productionYear;
     }
 
-    public void setProductionYear(Date productionYear) {
+    public void setProductionYear(String productionYear) {
         this.productionYear = productionYear;
     }
 
@@ -73,18 +71,28 @@ public class Vehicle extends Model {
         numberPlate = "undefined";
     }
 
-    public Vehicle(int id, int customerId, String producer, String model, int horsepower, Date productionYear, String numberPlate) {
+    public Vehicle(int id, int customerId, String producer, String model, int horsepower, String productionYear, String numberPlate) {
         setValues(id, customerId, producer, model, horsepower, productionYear, numberPlate);
     }
 
-    public Vehicle(int id, int customerId, String producer, String model, int horsepower, Date productionYear, String numberPlate, String customField) {
-        setValues(id, customerId, producer, model, horsepower, productionYear, numberPlate);
-        setCustomField(customField);
+    public Vehicle(int id, int customerId, String producer, String model, int horsepower, String productionYear, String numberPlate, String customField) {
+        setValues(id, customerId, producer, model, horsepower, productionYear, numberPlate, customField);
     }
 
     /* Methods */
 
-    public void setValues(int id, int customerId, String producer, String model, int horsepower, Date productionYear, String numberPlate) {
+    public void setValues(int id, int customerId, String producer, String model, int horsepower, String productionYear, String numberPlate, String customField) {
+        setId(id);
+        this.customerId = customerId;
+        this.producer = producer;
+        this.model = model;
+        this.horsepower = horsepower;
+        this.productionYear = productionYear;
+        this.numberPlate = numberPlate;
+        setCustomField(customField);
+    }
+
+    public void setValues(int id, int customerId, String producer, String model, int horsepower, String productionYear, String numberPlate) {
         setId(id);
         this.customerId = customerId;
         this.producer = producer;
@@ -94,7 +102,7 @@ public class Vehicle extends Model {
         this.numberPlate = numberPlate;
     }
 
-    public void updateValues(int customerId, String producer, String model, int horsepower, Date productionYear, String numberPlate) {
+    public void updateValues(int customerId, String producer, String model, int horsepower, String productionYear, String numberPlate) {
         this.customerId = customerId;
         this.producer = producer;
         this.model = model;

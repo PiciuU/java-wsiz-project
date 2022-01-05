@@ -1,10 +1,10 @@
-package modules;
+package models;
 
 public class ParkingSlot extends Model {
     /* Fields */
 
     private int parkingId;
-    private int slotNumber;
+    private String slotNumber;
 
     /* Getters & Setters */
 
@@ -16,11 +16,11 @@ public class ParkingSlot extends Model {
         this.parkingId = parkingId;
     }
 
-    public int getSlotNumber() {
+    public String getSlotNumber() {
         return slotNumber;
     }
 
-    public void setSlotNumber(int slotNumber) {
+    public void setSlotNumber(String slotNumber) {
         this.slotNumber = slotNumber;
     }
 
@@ -28,27 +28,33 @@ public class ParkingSlot extends Model {
 
     public ParkingSlot() {
         parkingId = 0;
-        slotNumber = 0;
+        slotNumber = "undefined";
     }
 
-    public ParkingSlot(int id, int parkingId, int slotNumber) {
+    public ParkingSlot(int id, int parkingId, String slotNumber) {
         setValues(id, parkingId, slotNumber);
     }
 
-    public ParkingSlot(int id, int parkingId, int slotNumber, String customField) {
-        setValues(id, parkingId, slotNumber);
-        setCustomField(customField);
+    public ParkingSlot(int id, int parkingId, String slotNumber, String customField) {
+        setValues(id, parkingId, slotNumber, customField);
     }
 
     /* Methods */
 
-    public void setValues(int id, int parkingId, int slotNumber) {
+    public void setValues(int id, int parkingId, String slotNumber, String customField) {
+        setId(id);
+        this.parkingId = parkingId;
+        this.slotNumber = slotNumber;
+        setCustomField(customField);
+    }
+
+    public void setValues(int id, int parkingId, String slotNumber) {
         setId(id);
         this.parkingId = parkingId;
         this.slotNumber = slotNumber;
     }
 
-    public void updateValues(int parkingId, int slotNumber) {
+    public void updateValues(int parkingId, String slotNumber) {
         this.parkingId = parkingId;
         this.slotNumber = slotNumber;
     }

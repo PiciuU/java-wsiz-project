@@ -1,7 +1,6 @@
 package main;
 
-import GUI.App;
-import database.DBMigration;
+import gui.App;
 
 public class Main {
 

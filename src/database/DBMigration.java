@@ -1,5 +1,7 @@
 package database;
 
+import database.controllers.Controller;
+
 import java.sql.SQLException;
 
 /** An abstract class for database migration.
@@ -7,7 +9,7 @@ import java.sql.SQLException;
  *
  * @author Patryk Strzałka
  */
-public abstract class DBMigration extends DBModel {
+public abstract class DBMigration extends Controller {
     /**
      * Init migration or rollback process of the database
      *
@@ -16,14 +18,14 @@ public abstract class DBMigration extends DBModel {
     public static void init(String operation) {
         setConnection();
         if (operation == "migrate") {
-            createParkingLotTable();
+            createParkingTable();
             createParkingSlotTable();
             createParkingSlotReservationTable();
             createVehicleTable();
             createCustomerTable();
         }
         else if (operation == "rollback") {
-            dropParkingLotTable();
+            dropParkingTable();
             dropParkingSlotTable();
             dropParkingSlotReservationTable();
             dropVehicleTable();
@@ -40,9 +42,9 @@ public abstract class DBMigration extends DBModel {
      *
      * @exception SQLException
      */
-    private static void createParkingLotTable() {
+    private static void createParkingTable() {
         try {
-            getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking_lot (\n"
+            getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking (\n"
                     + "	id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                     + "	parking_name TEXT NOT NULL,\n"
                     + "	address TEXT NOT NULL,\n"
@@ -50,7 +52,7 @@ public abstract class DBMigration extends DBModel {
                     + ") ");
         }
         catch (SQLException e) {
-            System.err.println("[DBMigration::createParkingLotTable] SQLException: " + e.getMessage());
+            System.err.println("[DBMigration::createParkingTable] SQLException: " + e.getMessage());
         }
     }
 
@@ -64,7 +66,7 @@ public abstract class DBMigration extends DBModel {
             getStatement().executeUpdate("CREATE TABLE IF NOT EXISTS parking_slot (\n"
                     + "id INTEGER PRIMARY KEY AUTOINCREMENT,\n"
                     + "parking_id INTEGER NOT NULL,\n"
-                    + "slot_number INTEGER NOT NULL,\n"
+                    + "slot_number TEXT NOT NULL,\n"
                     + "UNIQUE(parking_id, slot_number)\n"
                     + ") ");
         }
@@ -138,12 +140,12 @@ public abstract class DBMigration extends DBModel {
      *
      * @exception SQLException
      */
-    private static void dropParkingLotTable() {
+    private static void dropParkingTable() {
         try {
-            getStatement().executeUpdate("DROP TABLE IF EXISTS parking_lot");
+            getStatement().executeUpdate("DROP TABLE IF EXISTS parking");
         }
         catch (SQLException e) {
-            System.err.println("[DBMigration::dropParkingLotTable] SQLException: " + e.getMessage());
+            System.err.println("[DBMigration::dropParkingTable] SQLException: " + e.getMessage());
         }
     }
 

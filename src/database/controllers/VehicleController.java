@@ -1,6 +1,6 @@
-package database;
+package database.controllers;
 
-import modules.Vehicle;
+import models.Vehicle;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -8,17 +8,17 @@ import java.sql.SQLException;
 import java.sql.Date;
 import java.util.ArrayList;
 
-public class VehicleDB extends DBModel {
+public class VehicleController extends Controller {
 
     /** Define Singleton */
-    private static VehicleDB instance;
+    private static VehicleController instance;
 
     /**
      * Constructor to prevent creating new instance
      *
      * @exception IllegalStateException
      */
-    private VehicleDB() {
+    private VehicleController() {
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, use getInstance method instead.");
         }
@@ -27,10 +27,10 @@ public class VehicleDB extends DBModel {
     /**
      * Get instance of an object
      *
-     * @return ParkingLotDB
+     * @return VehicleController
      */
-    public static VehicleDB getInstance() {
-        if (instance == null) instance = new VehicleDB();
+    public static VehicleController getInstance() {
+        if (instance == null) instance = new VehicleController();
         return instance;
     }
 
@@ -47,7 +47,7 @@ public class VehicleDB extends DBModel {
         ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
         try {
             while (rs.next()) {
-                Vehicle vehicle = new Vehicle(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getDate("production_year"), rs.getString("number_plate"));
+                Vehicle vehicle = new Vehicle(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
                 vehicleList.add(vehicle);
             }
         }
@@ -75,7 +75,7 @@ public class VehicleDB extends DBModel {
         Vehicle vehicle = new Vehicle();
 
         try {
-            vehicle.setValues(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getDate("production_year"), rs.getString("number_plate"));
+            vehicle.setValues(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
         }
         catch(Exception e) {
             System.out.println(e);
@@ -98,7 +98,7 @@ public class VehicleDB extends DBModel {
      * @param number_plate car number plate
      * @exception Exception
      */
-    public void insertRecord(int customer_id, String producer, String model, int horsepower, Date production_year, String number_plate) {
+    public void insertRecord(int customer_id, String producer, String model, int horsepower, String production_year, String number_plate) {
         setConnection();
 
         try {
@@ -107,7 +107,7 @@ public class VehicleDB extends DBModel {
             prepareStatement.setString(2, producer);
             prepareStatement.setString(3, model);
             prepareStatement.setInt(4, horsepower);
-            prepareStatement.setDate(5, production_year);
+            prepareStatement.setString(5, production_year);
             prepareStatement.setString(6, number_plate);
             insert(prepareStatement);
         }
@@ -131,16 +131,16 @@ public class VehicleDB extends DBModel {
      * @param number_plate car number plate
      * @exception Exception
      */
-    public void updateRecord(int id, int customer_id, String producer, String model, int horsepower, Date production_year, String number_plate) {
+    public void updateRecord(int id, int customer_id, String producer, String model, int horsepower, String production_year, String number_plate) {
         setConnection();
 
         try {
-            PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE parking_slot_reservation SET customer_id = ?, producer = ?, model = ?, horsepower = ?, production_year = ?, number_plate = ? WHERE id = ?");
+            PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE vehicle SET customer_id = ?, producer = ?, model = ?, horsepower = ?, production_year = ?, number_plate = ? WHERE id = ?");
             prepareStatement.setInt(1, customer_id);
             prepareStatement.setString(2, producer);
             prepareStatement.setString(3, model);
             prepareStatement.setInt(4, horsepower);
-            prepareStatement.setDate(5, production_year);
+            prepareStatement.setString(5, production_year);
             prepareStatement.setString(6, number_plate);
             prepareStatement.setInt(7, id);
 
@@ -152,6 +152,69 @@ public class VehicleDB extends DBModel {
         finally {
             closeConnection();
         }
+    }
+
+    /**
+     * Delete existing record in a vehicle table
+     *
+     * @param id id of the vehicle
+     * @exception Exception
+     */
+    public void deleteRecord(int id) {
+        setConnection();
+
+        try {
+            PreparedStatement prepareStatement = getConnection().prepareStatement("DELETE FROM vehicle WHERE id = ?");
+            prepareStatement.setInt(1, id);
+
+            delete(prepareStatement);
+        }
+        catch (SQLException e) {
+            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+        }
+        finally {
+            closeConnection();
+        }
+    }
+
+    public ArrayList<Vehicle> getCustom(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
+        try {
+            while (rs.next()) {
+                Vehicle vehicle = new Vehicle(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
+                vehicleList.add(vehicle);
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return vehicleList;
+    }
+
+    public Vehicle getCustomOne(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        Vehicle vehicle = new Vehicle();
+
+        try {
+            vehicle.setValues(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return vehicle;
     }
 
 }

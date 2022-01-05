@@ -1,24 +1,23 @@
-package database;
+package database.controllers;
 
-import modules.Customer;
+import models.Customer;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 
-public class CustomerDB extends DBModel {
+public class CustomerController extends Controller {
 
     /** Define Singleton */
-    private static CustomerDB instance;
+    private static CustomerController instance;
 
     /**
      * Constructor to prevent creating new instance
      *
      * @exception IllegalStateException
      */
-    private CustomerDB() {
+    private CustomerController() {
         if (instance != null) {
             throw new IllegalStateException("Cannot create new instance, use getInstance method instead.");
         }
@@ -27,10 +26,10 @@ public class CustomerDB extends DBModel {
     /**
      * Get instance of an object
      *
-     * @return ParkingLotDB
+     * @return ParkingController
      */
-    public static CustomerDB getInstance() {
-        if (instance == null) instance = new CustomerDB();
+    public static CustomerController getInstance() {
+        if (instance == null) instance = new CustomerController();
         return instance;
     }
 
@@ -140,6 +139,76 @@ public class CustomerDB extends DBModel {
         finally {
             closeConnection();
         }
+    }
+
+    /**
+     * Delete existing record in a customer table
+     *
+     * @param id id of the vehicle
+     * @exception Exception
+     */
+    public void deleteRecord(int id) {
+        setConnection();
+
+        try {
+            PreparedStatement prepareStatement = getConnection().prepareStatement("DELETE FROM customer WHERE id = ?");
+            prepareStatement.setInt(1, id);
+
+            delete(prepareStatement);
+        }
+        catch (SQLException e) {
+            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+        }
+        finally {
+            closeConnection();
+        }
+    }
+
+    public ArrayList<Customer> getCustom(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        ArrayList<Customer> customerList = new ArrayList<Customer>();
+        try {
+            while (rs.next()) {
+                Customer customer = new Customer(rs.getInt("id"), rs.getString("firstname"), rs.getString("surname"), rs.getString("contact_number"));
+                customerList.add(customer);
+            }
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return customerList;
+    }
+
+    /**
+     * Return specific object of a customer table
+     *
+     * @param id an id of the parking slot reservation
+     * @exception Exception
+     * @return Customer
+     */
+    public Customer getCustomOne(String query) {
+        setConnection();
+        ResultSet rs = get(query);
+
+        Customer customer = new Customer();
+
+        try {
+            customer.setValues(rs.getInt("id"), rs.getString("firstname"), rs.getString("surname"), rs.getString("contact_number"));
+        }
+        catch(Exception e) {
+            System.out.println(e);
+        }
+        finally {
+            closeConnection();
+        }
+
+        return customer;
     }
 
 }

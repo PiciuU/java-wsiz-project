@@ -1,13 +1,12 @@
-package GUI;
+package gui;
 
-import GUI.layouts.*;
+import gui.layouts.*;
 
-import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
-public class App extends JFrame implements ActionListener {
+public class App extends GUIManager implements ActionListener {
 
     /** Define Singleton */
     private static App instance;
@@ -44,6 +43,9 @@ public class App extends JFrame implements ActionListener {
         return instance;
     }
 
+    /** Application frame */
+    protected JFrame _frame;
+
     /** Layout for choosing or creating new parking */
     protected Default defaultLayout;
 
@@ -51,10 +53,10 @@ public class App extends JFrame implements ActionListener {
     protected Authorized authorizedLayout;
 
     /** Menu Bar */
-    protected JMenuBar menuBar;
-    protected JMenu fileMenu;
-    protected JMenuItem changeParkingItem;
-    protected JMenuItem exitItem;
+    protected JMenuBar _menuBar;
+    protected JMenu _fileMenu;
+    protected JMenuItem _parkingItem;
+    protected JMenuItem _exitItem;
 
     /**
      * Initialize GUI with default layout and custom properties
@@ -64,14 +66,22 @@ public class App extends JFrame implements ActionListener {
      * @param appHeight A height for application in pixels
      */
     private void init(String appName, int appWidth, int appHeight) {
-        setTitle(appName);
-        setSize(appWidth, appHeight);
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+        renderFrame(appName, appWidth, appHeight);
         renderMenuBar();
+        //renderDefaultLayout(false);
         renderAuthorizedLayout(1);
+    }
 
-        setVisible(true);
+    /**
+     * Render and mount global frame to application
+     *
+     */
+    public void renderFrame(String appName, int appWidth, int appHeight) {
+        _frame = new JFrame();
+        _frame.setTitle(appName);
+        _frame.setSize(appWidth, appHeight);
+        _frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        _frame.setVisible(true);
     }
 
     /**
@@ -79,22 +89,22 @@ public class App extends JFrame implements ActionListener {
      *
      */
     public void renderMenuBar() {
-        menuBar = new JMenuBar();
+        _menuBar = new JMenuBar();
 
-        fileMenu = new JMenu("Plik");
+        _fileMenu = new JMenu("Plik");
 
-        changeParkingItem = new JMenuItem("Zmień parking");
-        exitItem = new JMenuItem("Wyjdź");
+        _parkingItem = new JMenuItem("Zmień parking");
+        _exitItem = new JMenuItem("Wyjdź");
 
-        changeParkingItem.addActionListener(this);
-        exitItem.addActionListener(this);
+        _parkingItem.addActionListener(this);
+        _exitItem.addActionListener(this);
 
-        fileMenu.add(changeParkingItem);
-        fileMenu.add(exitItem);
+        _fileMenu.add(_parkingItem);
+        _fileMenu.add(_exitItem);
 
-        menuBar.add(fileMenu);
+        _menuBar.add(_fileMenu);
 
-        setJMenuBar(menuBar);
+        _frame.setJMenuBar(_menuBar);
     }
 
     /**
@@ -105,10 +115,10 @@ public class App extends JFrame implements ActionListener {
     public void renderDefaultLayout(Boolean enableAddMode) {
         defaultLayout = new Default(enableAddMode);
 
-        getContentPane().removeAll();
-        setContentPane(defaultLayout.getLayout());
-        getContentPane().revalidate();
-        getContentPane().repaint();
+        _frame.getContentPane().removeAll();
+        _frame.setContentPane(defaultLayout.getLayout());
+        _frame.getContentPane().revalidate();
+        _frame.getContentPane().repaint();
     }
 
     /**
@@ -119,10 +129,10 @@ public class App extends JFrame implements ActionListener {
     public void renderAuthorizedLayout(int parkingId) {
         authorizedLayout = new Authorized(parkingId);
 
-        getContentPane().removeAll();
-        setContentPane(authorizedLayout.getLayout());
-        getContentPane().revalidate();
-        getContentPane().repaint();
+        _frame.getContentPane().removeAll();
+        _frame.setContentPane(authorizedLayout.getLayout());
+        _frame.getContentPane().revalidate();
+        _frame.getContentPane().repaint();
     }
 
     /**
@@ -132,7 +142,7 @@ public class App extends JFrame implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == changeParkingItem) renderDefaultLayout(false);
+        if (e.getSource() == _parkingItem) renderDefaultLayout(false);
         else System.exit(0);
     }
 }

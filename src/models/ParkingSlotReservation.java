@@ -1,13 +1,11 @@
-package modules;
-
-import java.sql.Timestamp;
+package models;
 
 public class ParkingSlotReservation extends Model {
     /* Fields */
 
     private int vehicleId;
     private int parkingSlotId;
-    private Timestamp reservationDate;
+    private String reservationDate;
 
     /* Getters & Setters */
 
@@ -27,11 +25,11 @@ public class ParkingSlotReservation extends Model {
         this.parkingSlotId = parkingSlotId;
     }
 
-    public Timestamp getReservationDate() {
+    public String getReservationDate() {
         return reservationDate;
     }
 
-    public void setReservationDate(Timestamp reservationDate) {
+    public void setReservationDate(String reservationDate) {
         this.reservationDate = reservationDate;
     }
 
@@ -43,25 +41,32 @@ public class ParkingSlotReservation extends Model {
         reservationDate = null;
     }
 
-    public ParkingSlotReservation(int id, int vehicleId, int parkingSlotId, Timestamp reservationDate) {
+    public ParkingSlotReservation(int id, int vehicleId, int parkingSlotId, String reservationDate) {
         setValues(id, vehicleId, parkingSlotId, reservationDate);
     }
 
-    public ParkingSlotReservation(int id, int vehicleId, int parkingSlotId, Timestamp reservationDate, String customField) {
-        setValues(id, vehicleId, parkingSlotId, reservationDate);
-        setCustomField(customField);
+    public ParkingSlotReservation(int id, int vehicleId, int parkingSlotId, String reservationDate, String customField) {
+        setValues(id, vehicleId, parkingSlotId, reservationDate, customField);
     }
 
     /* Methods */
 
-    public void setValues(int id, int vehicleId, int parkingSlotId, Timestamp reservationDate) {
+    public void setValues(int id, int vehicleId, int parkingSlotId, String reservationDate, String customField) {
+        setId(id);
+        this.vehicleId = vehicleId;
+        this.parkingSlotId = parkingSlotId;
+        this.reservationDate = reservationDate;
+        setCustomField(customField);
+    }
+
+    public void setValues(int id, int vehicleId, int parkingSlotId, String reservationDate) {
         setId(id);
         this.vehicleId = vehicleId;
         this.parkingSlotId = parkingSlotId;
         this.reservationDate = reservationDate;
     }
 
-    public void updateValues(int vehicleId, int parkingSlotId, Timestamp reservationDate) {
+    public void updateValues(int vehicleId, int parkingSlotId, String reservationDate) {
         this.vehicleId = vehicleId;
         this.parkingSlotId = parkingSlotId;
         this.reservationDate = reservationDate;
