@@ -21,7 +21,6 @@ public abstract class GUIManager {
     public class Environment {
         private static String ENV_TYPE;
         private static int parkingId = 0;
-        private Boolean hasChildFrameOpen = false;
 
         public String getEnvType() {
             return ENV_TYPE;
@@ -37,14 +36,6 @@ public abstract class GUIManager {
 
         public void setParkingId(int parkingId) {
             Environment.parkingId = parkingId;
-        }
-
-        public Boolean getHasChildFrameOpen() {
-            return hasChildFrameOpen;
-        }
-
-        public void setHasChildFrameOpen(Boolean hasChildFrameOpen) {
-            this.hasChildFrameOpen = hasChildFrameOpen;
         }
     }
 

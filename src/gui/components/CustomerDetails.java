@@ -120,7 +120,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
         _textField = new JTextField();
         _textField.putClientProperty(column_name, column_value);
         _textField.setText(_textField.getClientProperty(column_name).toString());
-        _textField.setPreferredSize(new Dimension(150, 25));
+        _textField.setPreferredSize(new Dimension(250, 25));
         gridLayout.setConstraints(1, gridy, new Insets(20, 10, 0, 0));
         _frame.add(_textField, gridLayout.getConstraints());
 
@@ -183,7 +183,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);
-        gridLayout.setConstraints(0, 7, 4, new Insets(5, 0, 0, 0));
+        gridLayout.setConstraints(0, 4, 2, new Insets(5, 0, 0, 0));
         _frame.add(_error, gridLayout.getConstraints());
         _frame.validate();
     }
