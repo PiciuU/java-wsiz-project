@@ -2,9 +2,9 @@ package gui.components;
 
 import gui.GUIManager;
 
-import database.controllers.CustomerController;
+import database.controllers.ParkingController;
 
-import models.Customer;
+import models.Parking;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -13,11 +13,11 @@ import javax.swing.*;
 
 import java.util.ArrayList;
 
-public class CustomerDetails extends GUIManager implements ActionListener {
+public class ParkingDetails extends GUIManager implements ActionListener {
 
     private EventHandler customEvent;
 
-    protected Customer customer;
+    protected Parking parking;
 
     private GridLayout gridLayout;
 
@@ -30,24 +30,13 @@ public class CustomerDetails extends GUIManager implements ActionListener {
     private JLabel _error;
 
     /**
-     * Create component for undefined customer
+     * Create component for parking details
      *
      */
-    public CustomerDetails(EventHandler customEvent, String modalTitle) {
+    public ParkingDetails(EventHandler customEvent, int id) {
         this.customEvent = customEvent;
-        this.customer = new Customer();
-        renderFrame(modalTitle);
-        renderCreateContent();
-    }
-
-    /**
-     * Create component for defined customer
-     *
-     */
-    public CustomerDetails(EventHandler customEvent, String modalTitle, Customer customer) {
-        this.customEvent = customEvent;
-        this.customer = customer;
-        renderFrame(modalTitle);
+        parking = ParkingController.getInstance().getOne(id);
+        renderFrame("Edytuj dane parkingu - " + parking.getParkingName());
         renderEditContent();
     }
 
@@ -73,36 +62,18 @@ public class CustomerDetails extends GUIManager implements ActionListener {
     }
 
     /**
-     * Render and mount panel for customer create form
-     *
-     */
-    public void renderCreateContent() {
-        renderInputField("Imię", "firstname", "", 0);
-        renderInputField("Nazwisko", "surname", "", 1);
-        renderInputField("Numer telefonu", "contact_number", "", 2);
-
-        /* Button */
-        _button = new JButton("Dodaj");
-        _button.addActionListener(this);
-        _button.setActionCommand("addCustomer");
-        gridLayout.setConstraints(0, 3, 2, new Insets(20, 0, 0, 0));
-        _frame.add(_button, gridLayout.getConstraints());
-    }
-
-    /**
-     * Render and mount panel for customer edit form
+     * Render and mount panel for parking details edit form
      *
      */
     public void renderEditContent() {
-        renderInputField("Imię", "firstname", customer.getFirstname(), 0);
-        renderInputField("Nazwisko", "surname", customer.getSurname(), 1);
-        renderInputField("Numer telefonu", "contact_number", customer.getContactNumber(), 2);
+        renderInputField("Nazwa parkingu", "name", parking.getParkingName(), 0);
+        renderInputField("Adres", "address", parking.getAddress(), 1);
 
         /* Button */
         _button = new JButton("Zapisz zmiany");
         _button.addActionListener(this);
-        _button.setActionCommand("saveCustomer");
-        gridLayout.setConstraints(0, 3, 2, new Insets(20, 0, 0, 0));
+        _button.setActionCommand("saveParking");
+        gridLayout.setConstraints(0, 2, 2, new Insets(20, 0, 0, 0));
         _frame.add(_button, gridLayout.getConstraints());
     }
 
@@ -136,27 +107,15 @@ public class CustomerDetails extends GUIManager implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
 
-        if (action.equals("saveCustomer")) {
+        if (action.equals("saveParking")) {
             for (JTextField input: formInputs) {
                 if (input.getText().isEmpty()) {
                     throwVisibleError("Aby zapisać zmiany wszystkie pola muszą być uzupełnione!");
                     return;
                 }
             }
-            CustomerController.getInstance().updateRecord(customer.getId(), getValueOfProperty("firstname"), getValueOfProperty("surname"), getValueOfProperty("contact_number"));
+            ParkingController.getInstance().updateRecord(parking.getId(), getValueOfProperty("name"), getValueOfProperty("address"));
             customEvent.disposeFrame(_frame);
-            customEvent.reloadContent();
-        }
-        else if (action.equals("addCustomer")) {
-            for (JTextField input: formInputs) {
-                if (input.getText().isEmpty()) {
-                    throwVisibleError("Aby dodać nowego klienta wszystkie pola muszą być uzupełnione!");
-                    return;
-                }
-            }
-            CustomerController.getInstance().insertRecord(getValueOfProperty("firstname"), getValueOfProperty("surname"), getValueOfProperty("contact_number"));
-            customEvent.disposeFrame(_frame);
-            customEvent.reloadContent();
         }
     }
 

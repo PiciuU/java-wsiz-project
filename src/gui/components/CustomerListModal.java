@@ -1,14 +1,16 @@
 package gui.components;
 
+import gui.GUIManager;
+
 import database.controllers.CustomerController;
 
-import gui.GUIManager;
 import models.Customer;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import java.util.ArrayList;
 
 public class CustomerListModal extends GUIManager implements ActionListener {
@@ -27,6 +29,10 @@ public class CustomerListModal extends GUIManager implements ActionListener {
     private JButton _button;
     private JLabel _error;
 
+    /**
+     * Create component for customers list modal
+     *
+     */
     public CustomerListModal(EventHandler customEvent) {
         this.customEvent = customEvent;
         customersData = CustomerController.getInstance().getAll();
@@ -35,7 +41,7 @@ public class CustomerListModal extends GUIManager implements ActionListener {
     }
 
     /**
-     * Render and mount frame for available customers
+     * Render and mount frame for customers list modal
      *
      */
     public void renderFrame() {
@@ -50,7 +56,7 @@ public class CustomerListModal extends GUIManager implements ActionListener {
     }
 
     /**
-     * Render and mount content to _frame
+     * Render and mount content for customers list modal
      *
      */
     public void renderContent() {

@@ -4,16 +4,17 @@ import database.controllers.Controller;
 
 import java.sql.SQLException;
 
-/** An abstract class for database migration.
+/**
+ *  An abstract class for database migration.
  *  This class should only be used in case of database corruption!
  *
- * @author Patryk Strzałka
  */
 public abstract class DBMigration extends Controller {
     /**
      * Init migration or rollback process of the database
      *
      * @param operation A string containing requested operation
+     * @exception IllegalStateException if operation is invalid
      */
     public static void init(String operation) {
         setConnection();

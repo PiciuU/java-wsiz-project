@@ -1,15 +1,16 @@
 package gui.components;
 
-import database.controllers.VehicleController;
 import gui.GUIManager;
 
-import models.Vehicle;
+import database.controllers.VehicleController;
 
-import javax.swing.*;
+import models.Vehicle;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import java.util.ArrayList;
 
 public class VehicleList extends GUIManager implements ActionListener {
@@ -34,16 +35,10 @@ public class VehicleList extends GUIManager implements ActionListener {
     private DefaultListModel _listModel;
     private JList _list;
 
-    public JPanel getComponent() {
-        return _panel;
-    }
-
-    public JScrollPane getComponentScrollable() {
-        return _scrollPane;
-    }
-
-    public String getCurrentFilterValue() { return currentFilterValue; }
-
+    /**
+     * Create component for vehicle list
+     *
+     */
     public VehicleList(EventHandler customEvent) {
         this.customEvent = customEvent;
         refreshList("all_vehicles", false);
@@ -52,6 +47,10 @@ public class VehicleList extends GUIManager implements ActionListener {
         renderList();
     }
 
+    /**
+     * Create component for vehicle list with defined filter
+     *
+     */
     public VehicleList(EventHandler customEvent, String filterValue) {
         this.customEvent = customEvent;
         refreshList(filterValue, false);
@@ -59,6 +58,32 @@ public class VehicleList extends GUIManager implements ActionListener {
         renderFilterButtons();
         renderList();
     }
+
+    /**
+     * Get current value of filter
+     *
+     * @return A string containing current filter value
+     */
+    public String getCurrentFilterValue() { return currentFilterValue; }
+
+    /**
+     * Get component of vehicle list
+     *
+     * @return JPanel
+     */
+    public JPanel getComponent() {
+        return _panel;
+    }
+
+    /**
+     * Get scrollable component of vehicle list
+     *
+     * @return JScrollPane
+     */
+    public JScrollPane getComponentScrollable() {
+        return _scrollPane;
+    }
+
 
     /**
      * Render and mount panel
@@ -69,6 +94,10 @@ public class VehicleList extends GUIManager implements ActionListener {
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
     }
 
+    /**
+     * Render and mount filter buttons
+     *
+     */
     public void renderFilterButtons() {
         _innerPanel = new JPanel();
         _innerPanel.setLayout(new BoxLayout(_innerPanel, BoxLayout.LINE_AXIS));
@@ -102,6 +131,10 @@ public class VehicleList extends GUIManager implements ActionListener {
         _panel.add(_innerPanel);
     }
 
+    /**
+     * Render and mount filtered list
+     *
+     */
     public void renderList() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
@@ -125,6 +158,12 @@ public class VehicleList extends GUIManager implements ActionListener {
         _panel.add(_scrollPane);
     }
 
+    /**
+     * Refresh list basing on current filter
+     *
+     * @param filter value of filter
+     * @param reloadGUI if GUI should be reloaded
+     */
     public void refreshList(String filter, Boolean reloadGUI) {
         currentFilterValue = filter;
         switch(filter) {
@@ -145,6 +184,11 @@ public class VehicleList extends GUIManager implements ActionListener {
         }
     }
 
+    /**
+     * Handle the requested action
+     *
+     * @param e ActionEvent
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();

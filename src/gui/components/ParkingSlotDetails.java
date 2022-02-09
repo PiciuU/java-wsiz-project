@@ -13,12 +13,13 @@ import models.Vehicle;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import javax.swing.*;
 
-public class SlotDetails extends GUIManager implements ActionListener {
+public class ParkingSlotDetails extends GUIManager implements ActionListener {
 
     private EventHandler customEvent;
 
@@ -36,13 +37,21 @@ public class SlotDetails extends GUIManager implements ActionListener {
     private JButton _button;
     private JLabel _error;
 
-    public SlotDetails(EventHandler customEvent, String modalTitle) {
+    /**
+     * Create component for undefined parking slot
+     *
+     */
+    public ParkingSlotDetails(EventHandler customEvent, String modalTitle) {
         this.customEvent = customEvent;
         renderFrame(modalTitle);
         renderCreateModal();
     }
 
-    public SlotDetails(EventHandler customEvent, String modalTitle, ParkingSlot slot) {
+    /**
+     * Create component for defined parking slot details
+     *
+     */
+    public ParkingSlotDetails(EventHandler customEvent, String modalTitle, ParkingSlot slot) {
         this.customEvent = customEvent;
         this.slot = slot;
         this.isOccupied = (Integer.parseInt(slot.getCustomField()) != 0);
@@ -233,10 +242,10 @@ public class SlotDetails extends GUIManager implements ActionListener {
      * Custom events handled by GUIManager EventHandler
      *
      */
-    class CustomEvent extends EventHandler
-    {
+    class CustomEvent extends EventHandler {
         @Override
         public void handleSelect(Object object) {
+            if (getEnv().getEnvType() == "local") System.out.println("[ParkingSlotDetails]CustomEvent::handleSelect");
             chosenVehicle = (Vehicle) object;
             _textField.setText(chosenVehicle.getProducer() + " " + chosenVehicle.getModel() + " - " + chosenVehicle.getNumberPlate());
         }

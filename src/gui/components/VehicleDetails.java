@@ -1,17 +1,18 @@
 package gui.components;
 
-import database.controllers.CustomerController;
-
-import database.controllers.VehicleController;
 import gui.GUIManager;
-import models.Customer;
 
+import database.controllers.CustomerController;
+import database.controllers.VehicleController;
+
+import models.Customer;
 import models.Vehicle;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import java.util.ArrayList;
 
 public class VehicleDetails extends GUIManager implements ActionListener {
@@ -31,6 +32,10 @@ public class VehicleDetails extends GUIManager implements ActionListener {
     private JButton _button;
     private JLabel _error;
 
+    /**
+     * Create component for undefined vehicle details
+     *
+     */
     public VehicleDetails(EventHandler customEvent, String modalTitle) {
         this.customEvent = customEvent;
         this.vehicle = new Vehicle();
@@ -39,6 +44,10 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         renderCreateContent();
     }
 
+    /**
+     * Create component for defined vehicle details
+     *
+     */
     public VehicleDetails(EventHandler customEvent, String modalTitle, Vehicle vehicle) {
         this.customEvent = customEvent;
         this.vehicle = vehicle;
@@ -68,6 +77,10 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         _frame.setVisible(true);
     }
 
+    /**
+     * Render and mount panel for vehicle details create form
+     *
+     */
     public void renderCreateContent() {
         /* Label */
         _label = new JLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
@@ -103,6 +116,10 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         _frame.add(_button, gridLayout.getConstraints());
     }
 
+    /**
+     * Render and mount panel for vehicle details edit form
+     *
+     */
     public void renderEditContent() {
         /* Label */
         _label = new JLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
@@ -139,6 +156,10 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         _frame.add(_button, gridLayout.getConstraints());
     }
 
+    /**
+     * Render and mount input field
+     *
+     */
     private void renderInputField(String text, String column_name, String column_value, int gridy) {
         /* Label */
         _label = new JLabel(text + ": ", SwingConstants.LEFT);
@@ -156,6 +177,11 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         formInputs.add(_textField);
     }
 
+    /**
+     * Handle the requested action
+     *
+     * @param e ActionEvent
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
@@ -191,6 +217,11 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         }
     }
 
+    /**
+     * Find if requested property exists in array of inputs and get it
+     *
+     * @return A string with value of input or null value
+     */
     public String getValueOfProperty(String key) {
         for (JTextField input : formInputs) {
             if (input.getClientProperty(key) != null) return input.getText();
@@ -198,6 +229,11 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         return null;
     }
 
+    /**
+     * Throw visible validation error for GUI
+     *
+     * @param text text of validation error
+     */
     public void throwVisibleError(String text) {
         if (_frame.isAncestorOf(_error)) _frame.remove(_error);
         _error = new JLabel();
@@ -217,6 +253,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
     {
         @Override
         public void handleSelect(Object object) {
+            if (getEnv().getEnvType() == "local") System.out.println("[VehicleDetails]CustomEvent::handleSelect");
             customer = (Customer) object;
             for(Component component : _frame.getRootPane().getContentPane().getComponents()) {
                 if (component instanceof JTextField && ((JTextField) component).getClientProperty("customer") != null) {

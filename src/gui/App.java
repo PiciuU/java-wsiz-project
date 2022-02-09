@@ -2,6 +2,8 @@ package gui;
 
 import gui.layouts.*;
 
+import gui.components.ParkingDetails;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
@@ -14,7 +16,7 @@ public class App extends GUIManager implements ActionListener {
     /**
      * Constructor to prevent creating new instance
      *
-     * @exception IllegalStateException
+     * @exception IllegalStateException  if instance already exists
      */
     private App(String appName, int appWidth, int appHeight) {
         if (instance != null) {
@@ -34,7 +36,7 @@ public class App extends GUIManager implements ActionListener {
     /**
      * Get instance of an object
      *
-     * @return App
+     * @return App instance
      */
     public static App getInstance() {
         if (instance == null) {
@@ -55,6 +57,7 @@ public class App extends GUIManager implements ActionListener {
     /** Menu Bar */
     protected JMenuBar _menuBar;
     protected JMenu _fileMenu;
+    protected JMenuItem _editParkingItem;
     protected JMenuItem _parkingItem;
     protected JMenuItem _exitItem;
 
@@ -93,14 +96,15 @@ public class App extends GUIManager implements ActionListener {
 
         _fileMenu = new JMenu("Plik");
 
+        _editParkingItem = new JMenuItem("Edytuj dane parkingu");
         _parkingItem = new JMenuItem("Zmień parking");
         _exitItem = new JMenuItem("Wyjdź");
 
+        _editParkingItem.addActionListener(this);
         _parkingItem.addActionListener(this);
         _exitItem.addActionListener(this);
 
-        _fileMenu.add(_parkingItem);
-        _fileMenu.add(_exitItem);
+        renderMenuItems();
 
         _menuBar.add(_fileMenu);
 
@@ -114,6 +118,7 @@ public class App extends GUIManager implements ActionListener {
      */
     public void renderDefaultLayout(Boolean enableAddMode) {
         defaultLayout = new Default(enableAddMode);
+        renderMenuItems();
 
         _frame.getContentPane().removeAll();
         _frame.setContentPane(defaultLayout.getLayout());
@@ -128,11 +133,27 @@ public class App extends GUIManager implements ActionListener {
      */
     public void renderAuthorizedLayout(int parkingId) {
         authorizedLayout = new Authorized(parkingId);
+        renderMenuItems();
 
         _frame.getContentPane().removeAll();
         _frame.setContentPane(authorizedLayout.getLayout());
         _frame.getContentPane().revalidate();
         _frame.getContentPane().repaint();
+    }
+
+    /**
+     * Render and mount items to menu bar
+     *
+     */
+    public void renderMenuItems() {
+        _fileMenu.removeAll();
+
+        if (getEnv().getParkingId() != 0) {
+            _fileMenu.add(_editParkingItem);
+            _fileMenu.add(_parkingItem);
+        }
+
+        _fileMenu.add(_exitItem);
     }
 
     /**
@@ -142,7 +163,26 @@ public class App extends GUIManager implements ActionListener {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == _parkingItem) renderDefaultLayout(false);
+        if (e.getSource() == _editParkingItem) {
+            if (getEnv().getParkingId() == 0) return;
+            new ParkingDetails(new CustomEvent(), getEnv().getParkingId());
+        }
+        else if (e.getSource() == _parkingItem) {
+            getEnv().setParkingId(0);
+            renderDefaultLayout(false);
+        }
         else System.exit(0);
+    }
+
+    /**
+     * Custom events handled by GUIManager EventHandler
+     *
+     */
+    class CustomEvent extends EventHandler {
+        @Override
+        public void disposeFrame(JFrame frame) {
+            if (getEnv().getEnvType() == "local") System.out.println("[App]CustomEvent::disposeFrame");
+            frame.dispose();
+        }
     }
 }

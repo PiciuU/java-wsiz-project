@@ -5,6 +5,7 @@ import models.Customer;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 public class CustomerController extends Controller {
@@ -15,7 +16,7 @@ public class CustomerController extends Controller {
     /**
      * Constructor to prevent creating new instance
      *
-     * @exception IllegalStateException
+     * @exception IllegalStateException if instance already exists
      */
     private CustomerController() {
         if (instance != null) {
@@ -26,7 +27,7 @@ public class CustomerController extends Controller {
     /**
      * Get instance of an object
      *
-     * @return ParkingController
+     * @return CustomerController instance
      */
     public static CustomerController getInstance() {
         if (instance == null) instance = new CustomerController();
@@ -34,9 +35,9 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Return all objects of a customer table
+     * Fetch all entries from the customer table
      *
-     * @exception Exception
+     * @exception Exception if statement couldn't be resolved
      * @return ArrayList<Customer>
      */
     public ArrayList<Customer> getAll() {
@@ -61,10 +62,10 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Return specific object of a customer table
+     * Fetch specific entry from the customer table
      *
-     * @param id an id of the parking slot reservation
-     * @exception Exception
+     * @param id customer ID
+     * @exception Exception if statement couldn't be resolved
      * @return Customer
      */
     public Customer getOne(int id) {
@@ -87,12 +88,12 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Insert new record into a customer table
+     * Insert new record into the customer table
      *
-     * @param firstname firstname of the customer
-     * @param surname surname of the customer
-     * @param contact_number contact number of the customer
-     * @exception Exception
+     * @param firstname customer name
+     * @param surname customer surname
+     * @param contact_number customer contact number
+     * @exception SQLException if statement couldn't be resolved
      */
     public void insertRecord(String firstname, String surname, String contact_number) {
         setConnection();
@@ -105,7 +106,7 @@ public class CustomerController extends Controller {
             insert(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::insert] SQLException: " + e.getMessage());
+            System.out.println("[CustomerController::insert] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -113,13 +114,13 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Update existing record in a customer table
+     * Update existing record in the customer table
      *
-     * @param id id of the parking slot reservation
-     * @param firstname firstname of the customer
-     * @param surname surname of the customer
-     * @param contact_number contact number of the customer
-     * @exception Exception
+     * @param id customer ID
+     * @param firstname customer name
+     * @param surname customer surname
+     * @param contact_number customer contact number
+     * @exception SQLException if statement couldn't be resolved
      */
     public void updateRecord(int id, String firstname, String surname, String contact_number) {
         setConnection();
@@ -134,7 +135,7 @@ public class CustomerController extends Controller {
             update(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::update] SQLException: " + e.getMessage());
+            System.out.println("[CustomerController::update] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -142,10 +143,10 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Delete existing record in a customer table
+     * Delete existing record in the customer table
      *
-     * @param id id of the vehicle
-     * @exception Exception
+     * @param id customer ID
+     * @exception SQLException if statement couldn't be resolved
      */
     public void deleteRecord(int id) {
         setConnection();
@@ -157,13 +158,20 @@ public class CustomerController extends Controller {
             delete(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+            System.out.println("[CustomerController::delete] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
         }
     }
 
+    /**
+     * Fetch custom entries from the customer table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return ArrayList<Customer>
+     */
     public ArrayList<Customer> getCustom(String query) {
         setConnection();
         ResultSet rs = get(query);
@@ -186,10 +194,10 @@ public class CustomerController extends Controller {
     }
 
     /**
-     * Return specific object of a customer table
+     * Fetch custom entry from the customer table
      *
-     * @param id an id of the parking slot reservation
-     * @exception Exception
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
      * @return Customer
      */
     public Customer getCustomOne(String query) {

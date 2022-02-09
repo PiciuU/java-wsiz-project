@@ -5,7 +5,7 @@ import models.Vehicle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Date;
+
 import java.util.ArrayList;
 
 public class VehicleController extends Controller {
@@ -16,7 +16,7 @@ public class VehicleController extends Controller {
     /**
      * Constructor to prevent creating new instance
      *
-     * @exception IllegalStateException
+     * @exception IllegalStateException if instance already exists
      */
     private VehicleController() {
         if (instance != null) {
@@ -27,7 +27,7 @@ public class VehicleController extends Controller {
     /**
      * Get instance of an object
      *
-     * @return VehicleController
+     * @return VehicleController instance
      */
     public static VehicleController getInstance() {
         if (instance == null) instance = new VehicleController();
@@ -35,9 +35,9 @@ public class VehicleController extends Controller {
     }
 
     /**
-     * Return all objects of a vehicle table
+     * Fetch all entries from the vehicle table
      *
-     * @exception Exception
+     * @exception Exception if statement couldn't be resolved
      * @return ArrayList<Vehicle>
      */
     public ArrayList<Vehicle> getAll() {
@@ -62,10 +62,10 @@ public class VehicleController extends Controller {
     }
 
     /**
-     * Return specific object of a vehicle table
+     * Fetch specific entry from the vehicle table
      *
-     * @param id an id of the parking slot reservation
-     * @exception Exception
+     * @param id vehicle ID
+     * @exception Exception if statement couldn't be resolved
      * @return Vehicle
      */
     public Vehicle getOne(int id) {
@@ -88,15 +88,15 @@ public class VehicleController extends Controller {
     }
 
     /**
-     * Insert new record into a vehicle table
+     * Insert new record into the vehicle table
      *
-     * @param customer_id id of the customer
-     * @param producer name of the producer
-     * @param model name of the model
-     * @param horsepower car horsepower
-     * @param production_year date of production
-     * @param number_plate car number plate
-     * @exception Exception
+     * @param customer_id customer ID
+     * @param producer vehicle producer
+     * @param model vehicle model
+     * @param horsepower vehicle horsepower
+     * @param production_year vehicle production year
+     * @param number_plate vehicle number plates
+     * @exception SQLException if statement couldn't be resolved
      */
     public void insertRecord(int customer_id, String producer, String model, int horsepower, String production_year, String number_plate) {
         setConnection();
@@ -112,7 +112,7 @@ public class VehicleController extends Controller {
             insert(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::insert] SQLException: " + e.getMessage());
+            System.out.println("[VehicleController::insert] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -120,16 +120,16 @@ public class VehicleController extends Controller {
     }
 
     /**
-     * Update existing record in a vehicle table
+     * Update existing record in the vehicle table
      *
-     * @param id id of the vehicle
-     * @param customer_id id of the customer
-     * @param producer name of the producer
-     * @param model name of the model
-     * @param horsepower car horsepower
-     * @param production_year date of production
-     * @param number_plate car number plate
-     * @exception Exception
+     * @param id vehicle ID
+     * @param customer_id customer ID
+     * @param producer vehicle producer
+     * @param model vehicle model
+     * @param horsepower vehicle horsepower
+     * @param production_year vehicle production year
+     * @param number_plate vehicle number plates
+     * @exception SQLException if statement couldn't be resolved
      */
     public void updateRecord(int id, int customer_id, String producer, String model, int horsepower, String production_year, String number_plate) {
         setConnection();
@@ -147,7 +147,7 @@ public class VehicleController extends Controller {
             update(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::update] SQLException: " + e.getMessage());
+            System.out.println("[VehicleController::update] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -155,10 +155,10 @@ public class VehicleController extends Controller {
     }
 
     /**
-     * Delete existing record in a vehicle table
+     * Delete existing record in the customer table
      *
-     * @param id id of the vehicle
-     * @exception Exception
+     * @param id vehicle ID
+     * @exception SQLException if statement couldn't be resolved
      */
     public void deleteRecord(int id) {
         setConnection();
@@ -170,13 +170,20 @@ public class VehicleController extends Controller {
             delete(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+            System.out.println("[VehicleController::delete] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
         }
     }
 
+    /**
+     * Fetch custom entries from the vehicle table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return ArrayList<Vehicle>
+     */
     public ArrayList<Vehicle> getCustom(String query) {
         setConnection();
         ResultSet rs = get(query);
@@ -184,7 +191,11 @@ public class VehicleController extends Controller {
         ArrayList<Vehicle> vehicleList = new ArrayList<Vehicle>();
         try {
             while (rs.next()) {
-                Vehicle vehicle = new Vehicle(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
+                String custom_field;
+                try { custom_field = rs.getString("custom_field"); }
+                catch (Exception e) { custom_field = ""; }
+
+                Vehicle vehicle = new Vehicle(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"), custom_field);
                 vehicleList.add(vehicle);
             }
         }
@@ -198,6 +209,13 @@ public class VehicleController extends Controller {
         return vehicleList;
     }
 
+    /**
+     * Fetch custom entry from the vehicle table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return Vehicle
+     */
     public Vehicle getCustomOne(String query) {
         setConnection();
         ResultSet rs = get(query);
@@ -205,7 +223,11 @@ public class VehicleController extends Controller {
         Vehicle vehicle = new Vehicle();
 
         try {
-            vehicle.setValues(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"));
+            String custom_field;
+            try { custom_field = rs.getString("custom_field"); }
+            catch (Exception e) { custom_field = ""; }
+
+            vehicle.setValues(rs.getInt("id"), rs.getInt("customer_id"), rs.getString("producer"), rs.getString("model"), rs.getInt("horsepower"), rs.getString("production_year"), rs.getString("number_plate"), custom_field);
         }
         catch(Exception e) {
             System.out.println(e);

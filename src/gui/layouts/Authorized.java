@@ -1,6 +1,7 @@
 package gui.layouts;
 
 import gui.GUIManager;
+
 import gui.views.*;
 
 import java.awt.*;
@@ -15,15 +16,25 @@ public class Authorized extends GUIManager {
     private Vehicles _vehiclesTab;
     private Customers _customersTab;
 
-    public JPanel getLayout() { return _panel; }
-
+    /**
+     * Create authorized layout to application
+     *
+     * @param id parking ID
+     */
     public Authorized(int id) {
         getEnv().setParkingId(id);
         renderPanel();
     }
 
     /**
-     * Render and mount panel for parking layout
+     * Get authorized layout
+     *
+     * @return JPanel
+     */
+    public JPanel getLayout() { return _panel; }
+
+    /**
+     * Render and mount panel for authorized layout
      *
      */
     public void renderPanel() {

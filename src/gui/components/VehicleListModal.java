@@ -9,8 +9,9 @@ import models.Vehicle;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.*;
+
+import java.util.ArrayList;
 
 public class VehicleListModal extends GUIManager implements ActionListener {
 
@@ -28,6 +29,10 @@ public class VehicleListModal extends GUIManager implements ActionListener {
     private JButton _button;
     private JLabel _error;
 
+    /**
+     * Create component for vehicle list modal
+     *
+     */
     public VehicleListModal(EventHandler customEvent, Boolean onlyAvailableVehicles) {
         this.customEvent = customEvent;
         vehiclesData = onlyAvailableVehicles ? VehicleController.getInstance().getCustom("SELECT vehicle.* FROM vehicle LEFT JOIN parking_slot_reservation ON vehicle.id = parking_slot_reservation.vehicle_id WHERE parking_slot_reservation.id IS NULL") : VehicleController.getInstance().getAll();

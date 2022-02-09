@@ -1,11 +1,11 @@
 package gui;
 
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import javax.swing.*;
 
 public abstract class GUIManager {
 
@@ -15,11 +15,21 @@ public abstract class GUIManager {
 
     public GUIManager() {
         env = new Environment();
+        if (env.getEnvType() == "local") System.out.println("Initialize GUIManager for " + super.getClass().getSimpleName());
     }
 
     public class Environment {
+        private static String ENV_TYPE;
         private static int parkingId = 0;
         private Boolean hasChildFrameOpen = false;
+
+        public String getEnvType() {
+            return ENV_TYPE;
+        }
+
+        public void setEnvType(String ENV_TYPE) {
+            Environment.ENV_TYPE = ENV_TYPE == "local" ? "local" : "production";
+        }
 
         public int getParkingId() {
             return parkingId;

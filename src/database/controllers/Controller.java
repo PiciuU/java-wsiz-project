@@ -1,6 +1,7 @@
 package database.controllers;
 
 import java.sql.*;
+
 import java.util.ArrayList;
 
 /**
@@ -21,27 +22,27 @@ public abstract class Controller {
     private static Statement db;
 
     /**
-     * Return object of a database connection
+     * Get current database connection
      *
-     * @return Connection
+     * @return An object of database connection
      */
     protected static Connection getConnection() {
         return connection;
     }
 
     /**
-     * Return object of a SQL statement
+     * Get Sqlite statement
      *
-     * @return Statement
+     * @return An object of SQL statement
      */
     protected static Statement getStatement() {
         return db;
     }
 
     /**
-     * Return last known inserted ID
+     * Get last inserted ID
      *
-     * @return int
+     * @return An int representing last known ID that was inserted into database
      */
     protected static int getLastInsertedId() {
         return lastInsertedId;
@@ -50,7 +51,7 @@ public abstract class Controller {
     /**
      * Establish a database connection
      *
-     * @exception SQLException
+     * @exception SQLException if database connection couldn't be established
      */
     public static void setConnection() {
         try {
@@ -65,7 +66,7 @@ public abstract class Controller {
     /**
      * Close connection to database
      *
-     * @exception SQLException e
+     * @exception SQLException if database connection couldn't be closed
      */
     protected static void closeConnection() {
         try {
@@ -77,11 +78,11 @@ public abstract class Controller {
     }
 
     /**
-     * Return query result from database
+     * Fetch data from database
      *
      * @param query A string containing SQL SELECT statement
-     * @exception SQLException
-     * @return ResultSet
+     * @exception SQLException if statement couldn't be resolved
+     * @return An ResultSet built from statement result
      */
     protected static ResultSet get(String query) {
         try {
@@ -94,10 +95,10 @@ public abstract class Controller {
     }
 
     /**
-     * Insert new record in a table
+     * Execute insert query in database
      *
-     * @param stmt A PreparedStatement for SQL INSERT INTO
-     * @exception SQLException
+     * @param stmt A PreparedStatement for insert statement
+     * @exception SQLException if statement couldn't be resolved
      */
      protected static void insert(PreparedStatement stmt) {
         try {
@@ -111,10 +112,10 @@ public abstract class Controller {
     }
 
     /**
-     * Update existing record in a table
+     * Execute update query in database
      *
-     * @param stmt A PreparedStatement for SQL UPDATE
-     * @exception SQLException
+     * @param stmt A PreparedStatement for update statement
+     * @exception SQLException if statement couldn't be resolved
      */
     protected static void update(PreparedStatement stmt) {
          try {
@@ -126,10 +127,10 @@ public abstract class Controller {
     }
 
     /**
-     * Delete existing record in a table
+     * Execute delete query in database
      *
-     * @param stmt A PreparedStatement for SQL DELETE
-     * @exception SQLException
+     * @param stmt A PreparedStatement for delete statement
+     * @exception SQLException if statement couldn't be resolved
      */
     protected static void delete(PreparedStatement stmt) {
         try {

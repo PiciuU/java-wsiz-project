@@ -1,13 +1,12 @@
 package database.controllers;
 
+import models.Parking;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import java.util.ArrayList;
-
-import models.Parking;
-import models.ParkingSlot;
 
 public class ParkingController extends Controller {
 
@@ -17,7 +16,7 @@ public class ParkingController extends Controller {
     /**
      * Constructor to prevent creating new instance
      *
-     * @exception IllegalStateException
+     * @exception IllegalStateException if instance already exists
      */
     private ParkingController() {
         if (instance != null) {
@@ -28,7 +27,7 @@ public class ParkingController extends Controller {
     /**
      * Get instance of an object
      *
-     * @return ParkingController
+     * @return ParkingController instance
      */
     public static ParkingController getInstance() {
         if (instance == null) instance = new ParkingController();
@@ -36,9 +35,9 @@ public class ParkingController extends Controller {
     }
 
     /**
-     * Return all objects of a parking table
+     * Fetch all entries from the parking table
      *
-     * @exception Exception
+     * @exception Exception if statement couldn't be resolved
      * @return ArrayList<Parking>
      */
     public ArrayList<Parking> getAll() {
@@ -63,10 +62,10 @@ public class ParkingController extends Controller {
     }
 
     /**
-     * Return specific object of a parking table
+     * Fetch specific entry from the parking table
      *
-     * @param id an id of the parking lot
-     * @exception Exception
+     * @param id parking ID
+     * @exception Exception if statement couldn't be resolved
      * @return Parking
      */
     public Parking getOne(int id) {
@@ -89,11 +88,11 @@ public class ParkingController extends Controller {
     }
 
     /**
-     * Insert new record into a parking table
+     * Insert new record into the parking table
      *
-     * @param parkingName name of the parking
-     * @param address address of the parking
-     * @exception Exception
+     * @param parkingName parking name
+     * @param address parking address
+     * @exception SQLException if statement couldn't be resolved
      */
     public void insertRecord(String parkingName, String address) {
         setConnection();
@@ -105,7 +104,7 @@ public class ParkingController extends Controller {
             insert(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::insert] SQLException: " + e.getMessage());
+            System.out.println("[ParkingController::insert] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -113,12 +112,12 @@ public class ParkingController extends Controller {
     }
 
     /**
-     * Update existing record in a parking table
+     * Update existing record in the parking table
      *
-     * @param id id of the parking
-     * @param parkingName name of the parking
-     * @param address address of the parking
-     * @exception Exception
+     * @param id parking ID
+     * @param parkingName parking name
+     * @param address parking address
+     * @exception SQLException if statement couldn't be resolved
      */
     public void updateRecord(int id, String parkingName, String address) {
         setConnection();
@@ -132,7 +131,7 @@ public class ParkingController extends Controller {
             update(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::update] SQLException: " + e.getMessage());
+            System.out.println("[ParkingController::update] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -140,10 +139,10 @@ public class ParkingController extends Controller {
     }
 
     /**
-     * Delete existing record in a parking table
+     * Delete existing record in the parking table
      *
-     * @param id id of the parking
-     * @exception Exception
+     * @param id parking ID
+     * @exception SQLException if statement couldn't be resolved
      */
     public void deleteRecord(int id) {
         setConnection();
@@ -155,13 +154,20 @@ public class ParkingController extends Controller {
             delete(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+            System.out.println("[ParkingController::delete] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
         }
     }
 
+    /**
+     * Fetch custom entries from the parking table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return ArrayList<Parking>
+     */
     public ArrayList<Parking> getCustom(String query) {
         setConnection();
         ResultSet rs = get(query);
@@ -183,6 +189,13 @@ public class ParkingController extends Controller {
         return parkingList;
     }
 
+    /**
+     * Fetch custom entry from the parking table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return Parking
+     */
     public Parking getCustomOne(String query) {
         setConnection();
         ResultSet rs = get(query);

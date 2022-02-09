@@ -5,6 +5,7 @@ import models.ParkingSlot;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.util.ArrayList;
 
 public class ParkingSlotController extends Controller {
@@ -15,7 +16,7 @@ public class ParkingSlotController extends Controller {
     /**
      * Constructor to prevent creating new instance
      *
-     * @exception IllegalStateException
+     * @exception IllegalStateException if instance already exists
      */
     private ParkingSlotController() {
         if (instance != null) {
@@ -26,7 +27,7 @@ public class ParkingSlotController extends Controller {
     /**
      * Get instance of an object
      *
-     * @return ParkingController
+     * @return ParkingController instance
      */
     public static ParkingSlotController getInstance() {
         if (instance == null) instance = new ParkingSlotController();
@@ -34,10 +35,10 @@ public class ParkingSlotController extends Controller {
     }
 
     /**
-     * Return all objects of a parking_slot table
+     * Fetch all entries from the parking_slot table
      *
-     * @param parking_id id of the parking
-     * @exception Exception
+     * @param parking_id parking ID
+     * @exception Exception if statement couldn't be resolved
      * @return ArrayList<ParkingSlot>
      */
     public ArrayList<ParkingSlot> getAll(int parking_id) {
@@ -62,10 +63,10 @@ public class ParkingSlotController extends Controller {
     }
 
     /**
-     * Return specific object of a parking_slot table
+     * Fetch specific entry from the parking_slot table
      *
-     * @param id an id of the parking slot
-     * @exception Exception
+     * @param id parking slot ID
+     * @exception Exception if statement couldn't be resolved
      * @return ParkingSlot
      */
     public ParkingSlot getOne(int id) {
@@ -88,23 +89,23 @@ public class ParkingSlotController extends Controller {
     }
 
     /**
-     * Insert new record into a parking_slot table
+     * Insert new record into the parking_slot table
      *
-     * @param parkingId id of the parking lot
-     * @param slotNumber number of the parking slot
-     * @exception Exception
+     * @param parking_id parking ID
+     * @param slot_number parking slot number
+     * @exception SQLException if statement couldn't be resolved
      */
-    public void insertRecord(int parkingId, String slotNumber) {
+    public void insertRecord(int parking_id, String slot_number) {
         setConnection();
 
         try {
             PreparedStatement prepareStatement = getConnection().prepareStatement("INSERT INTO parking_slot(parking_id, slot_number) VALUES(?, ?)");
-            prepareStatement.setInt(1, parkingId);
-            prepareStatement.setString(2, slotNumber);
+            prepareStatement.setInt(1, parking_id);
+            prepareStatement.setString(2, slot_number);
             insert(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::insert] SQLException: " + e.getMessage());
+            System.out.println("[ParkingSlotController::insert] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -112,26 +113,26 @@ public class ParkingSlotController extends Controller {
     }
 
     /**
-     * Update existing record in a parking_slot table
+     * Update existing record in the parking_slot table
      *
-     * @param id id of the parking slot
-     * @param parkingId id of the parking
-     * @param slotNumber number of the parking slot
-     * @exception Exception
+     * @param id parking slot ID
+     * @param parking_id parking ID
+     * @param slot_number number of the parking slot
+     * @exception SQLException if statement couldn't be resolved
      */
-    public void updateRecord(int id, int parkingId, String slotNumber) {
+    public void updateRecord(int id, int parking_id, String slot_number) {
         setConnection();
 
         try {
             PreparedStatement prepareStatement = getConnection().prepareStatement("UPDATE parking_slot SET parking_id = ?, slot_number = ? WHERE id = ?");
-            prepareStatement.setInt(1, parkingId);
-            prepareStatement.setString(2, slotNumber);
+            prepareStatement.setInt(1, parking_id);
+            prepareStatement.setString(2, slot_number);
             prepareStatement.setInt(3, id);
 
             update(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::update] SQLException: " + e.getMessage());
+            System.out.println("[ParkingSlotController::update] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
@@ -139,10 +140,10 @@ public class ParkingSlotController extends Controller {
     }
 
     /**
-     * Delete existing record in a parking slot table
+     * Delete existing record in the parking_slot table
      *
-     * @param id id of the parking slot
-     * @exception Exception
+     * @param id parking slot ID
+     * @exception SQLException if statement couldn't be resolved
      */
     public void deleteRecord(int id) {
         setConnection();
@@ -154,13 +155,20 @@ public class ParkingSlotController extends Controller {
             delete(prepareStatement);
         }
         catch (SQLException e) {
-            System.out.println("[ParkingDB::delete] SQLException: " + e.getMessage());
+            System.out.println("[ParkingSlotController::delete] SQLException: " + e.getMessage());
         }
         finally {
             closeConnection();
         }
     }
 
+    /**
+     * Fetch custom entries from the parking_slot table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return ArrayList<ParkingSlot>
+     */
     public ArrayList<ParkingSlot> getCustom(String query) {
         setConnection();
         ResultSet rs = get(query);
@@ -182,6 +190,13 @@ public class ParkingSlotController extends Controller {
         return parkingSlotList;
     }
 
+    /**
+     * Fetch custom entry from the parking_slot table
+     *
+     * @param query sqlite statement
+     * @exception Exception if statement couldn't be resolved
+     * @return ParkingSlot
+     */
     public ParkingSlot getCustomOne(String query) {
         setConnection();
         ResultSet rs = get(query);

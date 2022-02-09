@@ -1,24 +1,24 @@
 package gui.layouts;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import database.controllers.ParkingController;
-import models.Parking;
-
 import gui.App;
 import gui.GUIManager;
 
+import database.controllers.ParkingController;
+
+import models.Parking;
+
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.*;
+
+import java.util.ArrayList;
+
 public class Default extends GUIManager implements ActionListener {
 
-    /** ArrayList containing existing parking lots */
     protected ArrayList<Parking> parkings;
 
     /** GUI */
-
     private GridLayout gridLayout;
 
     private JPanel _panel;
@@ -31,9 +31,9 @@ public class Default extends GUIManager implements ActionListener {
     private JLabel _error;
 
     /**
-     * Render default layout components
+     * Create default layout to application
      *
-     * @param isAddModeEnabled A boolean indicating the required view
+     * @param isAddModeEnabled A boolean indicating the required inner view
      */
     public Default(Boolean isAddModeEnabled) {
         parkings = ParkingController.getInstance().getAll();
@@ -49,7 +49,7 @@ public class Default extends GUIManager implements ActionListener {
     }
 
     /**
-     * Get current layout
+     * Get default layout
      *
      * @return JPanel
      */
@@ -58,7 +58,7 @@ public class Default extends GUIManager implements ActionListener {
     }
 
     /**
-     * Build and mount a view for adding a new parking lot
+     * Build and mount an inner view containing form that allows to create a new parking lot
      *
      */
     public void buildAddParkingView() {
@@ -111,7 +111,7 @@ public class Default extends GUIManager implements ActionListener {
     }
 
     /**
-     * Build and mount a view for selecting an existing parking lot
+     * Build and mount an inner view containing form that allows to select an existing parking lot
      *
      */
     public void buildSelectParkingView() {
@@ -146,6 +146,7 @@ public class Default extends GUIManager implements ActionListener {
         gridLayout.setConstraints(0, 3, new Insets(100,0,0,0));
         _panelChild.add(_button, gridLayout.getConstraints());
     }
+
     /**
      * Handle the requested action
      *

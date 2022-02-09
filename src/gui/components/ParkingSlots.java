@@ -9,10 +9,11 @@ import models.ParkingSlot;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import javax.swing.*;
 
-public class Slots extends GUIManager implements ActionListener {
+import java.util.ArrayList;
+
+public class ParkingSlots extends GUIManager implements ActionListener {
 
     private EventHandler customEvent;
 
@@ -23,18 +24,32 @@ public class Slots extends GUIManager implements ActionListener {
     private JButton _button;
     private ArrayList<JButton> _buttonArray = new ArrayList<JButton>();
 
+    /**
+     * Create component for parking slots
+     *
+     */
+    public ParkingSlots(EventHandler customEvent) {
+        this.customEvent = customEvent;
+        parkingSlotsData = ParkingSlotController.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId());
+        renderPanel();
+    }
+
+    /**
+     * Get component of parking slots
+     *
+     * @return JPanel
+     */
     public JPanel getComponent() {
         return _panel;
     }
 
+    /**
+     * Get scrollable component of parking slots
+     *
+     * @return JScrollPane
+     */
     public JScrollPane getComponentScrollable() {
         return _scrollPane;
-    }
-
-    public Slots(EventHandler customEvent) {
-        this.customEvent = customEvent;
-        parkingSlotsData = ParkingSlotController.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId());
-        renderPanel();
     }
 
     /**
@@ -78,10 +93,10 @@ public class Slots extends GUIManager implements ActionListener {
         ParkingSlot slot = (ParkingSlot) _buttonArray.get(_buttonArray.indexOf(e.getSource())).getClientProperty("slot");
 
         if (slot == null || slot.isEmpty()) {
-            new SlotDetails(customEvent, "Kreator miejsca parkingowego");
+            new ParkingSlotDetails(customEvent, "Kreator miejsca parkingowego");
         }
         else {
-            new SlotDetails(customEvent, "Miejsce parkingowe nr " + slot.getSlotNumber(), slot);
+            new ParkingSlotDetails(customEvent, "Miejsce parkingowe nr " + slot.getSlotNumber(), slot);
         }
     }
 }

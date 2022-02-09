@@ -1,18 +1,18 @@
 package gui.components;
 
-import database.controllers.CustomerController;
-import database.controllers.VehicleController;
 import gui.GUIManager;
-import models.Customer;
-import models.Vehicle;
 
-import javax.swing.*;
+import database.controllers.CustomerController;
+
+import models.Customer;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+
 import java.util.ArrayList;
 
-public class CustomerList extends GUIManager implements ActionListener {
+public class CustomerList extends GUIManager {
 
     private EventHandler customEvent;
 
@@ -21,30 +21,29 @@ public class CustomerList extends GUIManager implements ActionListener {
     private ArrayList<Customer> customersData;
 
     private JPanel _panel;
-    private JPanel _innerPanel;
     private JScrollPane _scrollPane;
-    private JLabel _label;
-    private JButton _button;
-
-    private JRadioButton _radioButton;
-    private ButtonGroup _buttonGroup;
 
     private DefaultListModel _listModel;
     private JList _list;
 
-    public JPanel getComponent() {
-        return _panel;
-    }
-
-    public JScrollPane getComponentScrollable() {
-        return _scrollPane;
-    }
-
+    /**
+     * Create component for customers list
+     *
+     */
     public CustomerList(EventHandler customEvent) {
         this.customEvent = customEvent;
         customersData = CustomerController.getInstance().getAll();
         renderPanel();
         renderList();
+    }
+
+    /**
+     * Get component of customers list
+     *
+     * @return JPanel
+     */
+    public JPanel getComponent() {
+        return _panel;
     }
 
     /**
@@ -56,6 +55,10 @@ public class CustomerList extends GUIManager implements ActionListener {
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
     }
 
+    /**
+     * Render and mount list of customers
+     *
+     */
     public void renderList() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
@@ -77,10 +80,5 @@ public class CustomerList extends GUIManager implements ActionListener {
         _scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
         _scrollPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         _panel.add(_scrollPane);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        String action = e.getActionCommand();
     }
 }
