@@ -161,7 +161,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      * Render and mount input field
      *
      */
-    private void renderInputField(String text, String column_name, String column_value, int gridy) {
+    public void renderInputField(String text, String column_name, String column_value, int gridy) {
         /* Label */
         _label = new DLabel(text + ": ", SwingConstants.LEFT);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, gridy, 2, new Insets(20,0,0,0));

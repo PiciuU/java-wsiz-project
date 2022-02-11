@@ -42,7 +42,7 @@ public class Customers extends GUIManager implements ActionListener {
      * Render and mount panel for customers view
      *
      */
-    private void renderPanel() {
+    public void renderPanel() {
         _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
 

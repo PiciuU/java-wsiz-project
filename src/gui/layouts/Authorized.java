@@ -7,7 +7,6 @@ import gui.views.*;
 
 import java.awt.*;
 import javax.swing.*;
-import javax.swing.border.Border;
 
 public class Authorized extends GUIManager {
 

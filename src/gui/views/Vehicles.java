@@ -42,7 +42,7 @@ public class Vehicles extends GUIManager implements ActionListener {
      * Render and mount panel for vehicles view
      *
      */
-    private void renderPanel() {
+    public void renderPanel() {
         _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
 
