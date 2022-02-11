@@ -10,7 +10,7 @@ import java.util.ArrayList;
  */
 public abstract class Controller {
     /** Absolute path to SQLite database */
-    private static final String DB_URL = "jdbc:sqlite:src/database/db.sqlite";
+    private static final String DB_URL = "jdbc:sqlite:db.sqlite";
 
     /** Last known value of inserted record in database */
     private static int lastInsertedId = 0;

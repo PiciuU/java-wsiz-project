@@ -71,8 +71,7 @@ public class App extends GUIManager implements ActionListener {
     private void init(String appName, int appWidth, int appHeight) {
         renderFrame(appName, appWidth, appHeight);
         renderMenuBar();
-        //renderDefaultLayout(false);
-        renderAuthorizedLayout(1);
+        renderDefaultLayout(false);
     }
 
     /**

@@ -82,7 +82,7 @@ public class Parking extends GUIManager implements ActionListener {
         String action = e.getActionCommand();
 
         if (action.equals("parkVehicle")) {
-            ParkingSlot slot = ParkingSlotController.getInstance().getCustomOne("SELECT parking_slot.*, 0 AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId() + " AND parking_slot_reservation.id IS NULL LIMIT 1");
+            ParkingSlot slot = ParkingSlotController.getInstance().getCustomOne("SELECT parking_slot.*, 0 AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId() + " AND parking_slot_reservation.id IS NULL ORDER BY parking_slot.id LIMIT 1");
 
             new ParkingSlotDetails(new CustomEvent(), "Miejsce parkingowe nr " + slot.getSlotNumber(), slot);
         }
