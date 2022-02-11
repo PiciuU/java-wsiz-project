@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.VehicleController;
@@ -21,13 +22,13 @@ public class VehicleListModal extends GUIManager implements ActionListener {
 
     private GridLayout gridLayout;
 
-    private JFrame _frame;
-    private JScrollPane _scrollPane;
+    private DFrame _frame;
+    private DScrollPane _scrollPane;
 
     private DefaultListModel _listModel;
-    private JList _list;
-    private JButton _button;
-    private JLabel _error;
+    private DList _list;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create component for vehicle list modal
@@ -46,7 +47,7 @@ public class VehicleListModal extends GUIManager implements ActionListener {
      */
     public void renderFrame() {
         gridLayout = new GridLayout();
-        _frame = new JFrame();
+        _frame = new DFrame();
         _frame.setLayout(gridLayout);
         _frame.setTitle("Lista pojazdów");
         _frame.setSize(400, 400);
@@ -62,20 +63,20 @@ public class VehicleListModal extends GUIManager implements ActionListener {
     public void renderContent() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
-        _list = new JList(_listModel);
+        _list = new DList(_listModel);
 
         for(Vehicle vehicle : vehiclesData) {
             _listModel.addElement(vehicle.getProducer() + " " + vehicle.getModel() + " - " + vehicle.getNumberPlate());
         }
 
         /* ScrollPane */
-        _scrollPane = new JScrollPane(_list);
+        _scrollPane = new DScrollPane(_list);
         _scrollPane.setPreferredSize(new Dimension(250, 200));
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 1);
         _frame.add(_scrollPane, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Wybierz");
+        _button = new DButton("Wybierz");
         _button.addActionListener(this);
         _button.setActionCommand("chooseVehicle");
         _button.setPreferredSize(new Dimension(250, 50));
@@ -109,7 +110,7 @@ public class VehicleListModal extends GUIManager implements ActionListener {
      */
     public void throwVisibleError(String text) {
         if (_frame.isAncestorOf(_error)) _frame.remove(_error);
-        _error = new JLabel();
+        _error = new DLabel();
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);

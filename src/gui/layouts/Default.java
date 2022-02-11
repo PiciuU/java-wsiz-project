@@ -1,5 +1,6 @@
 package gui.layouts;
 
+import gui.DreamFX.*;
 import gui.App;
 import gui.GUIManager;
 
@@ -21,14 +22,14 @@ public class Default extends GUIManager implements ActionListener {
     /** GUI */
     private GridLayout gridLayout;
 
-    private JPanel _panel;
-    private JPanel _panelChild;
-    private JLabel _label;
-    private JComboBox _comboBox;
-    private JTextField _textField;
-    private JTextField _textFieldSecondary;
-    private JButton _button;
-    private JLabel _error;
+    private DPanel _panel;
+    private DPanel _panelChild;
+    private DLabel _label;
+    private DComboBox _comboBox;
+    private DTextField _textField;
+    private DTextField _textFieldSecondary;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create default layout to application
@@ -44,16 +45,17 @@ public class Default extends GUIManager implements ActionListener {
             buildSelectParkingView();
         }
 
-        _panel = new JPanel(new BorderLayout());
+        _panel = new DPanel();
+        _panel.setLayout(new BorderLayout());
         _panel.add(_panelChild);
     }
 
     /**
      * Get default layout
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getLayout() {
+    public DPanel getLayout() {
         return _panel;
     }
 
@@ -63,38 +65,38 @@ public class Default extends GUIManager implements ActionListener {
      */
     public void buildAddParkingView() {
         gridLayout = new GridLayout();
-        _panelChild = new JPanel();
+        _panelChild = new DPanel();
         _panelChild.setLayout(gridLayout);
 
         /* Label */
-        _label = new JLabel("Dodaj nowy parking: ", SwingConstants.CENTER);
-        gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
+        _label = new DLabel("Dodaj nowy parking: ", SwingConstants.CENTER);
+        gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(0,0,20,0));
         _panelChild.add(_label, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Nazwa parkingu: ", SwingConstants.LEFT);
-        gridLayout.setConstraints(0, 1, 1);
+        _label = new DLabel("Nazwa parkingu: ", SwingConstants.LEFT);
+        gridLayout.setConstraints(0, 1, 1, new Insets(0, 0, 0, 10));
         _panelChild.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.setPreferredSize(new Dimension(150, 25));
-        gridLayout.setConstraints(1, 1);
+        gridLayout.setConstraints(1, 1, new Insets(0, 0,0,0));
         _panelChild.add(_textField, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Adres parkingu: ", SwingConstants.LEFT);
-        gridLayout.setConstraints(0, 2);
+        _label = new DLabel("Adres parkingu: ", SwingConstants.LEFT);
+        gridLayout.setConstraints(0, 2, new Insets(10, 0, 0, 10));
         _panelChild.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textFieldSecondary = new JTextField();
+        _textFieldSecondary = new DTextField();
         _textFieldSecondary.setPreferredSize(new Dimension(150, 25));
-        gridLayout.setConstraints(1, 2);
+        gridLayout.setConstraints(1, 2, new Insets(10, 0,0,0));
         _panelChild.add(_textFieldSecondary, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Dodaj");
+        _button = new DButton("Dodaj");
         _button.addActionListener(this);
         _button.setActionCommand("addParking");
         gridLayout.setConstraints(0, 3, 2, new Insets(20,0,0,0));
@@ -102,10 +104,10 @@ public class Default extends GUIManager implements ActionListener {
 
         /* Button */
         if (!parkings.isEmpty()) {
-            _button = new JButton("Wróć do listy parkingów");
+            _button = new DButton("Wróć do listy parkingów");
             _button.addActionListener(this);
             _button.setActionCommand("returnToSelectMode");
-            gridLayout.setConstraints(0, 3, new Insets(100, 0, 0, 0));
+            gridLayout.setConstraints(0, 3, new Insets(110, 0, 0, 0));
             _panelChild.add(_button, gridLayout.getConstraints());
         }
     }
@@ -116,16 +118,16 @@ public class Default extends GUIManager implements ActionListener {
      */
     public void buildSelectParkingView() {
         gridLayout = new GUIManager.GridLayout();
-        _panelChild = new JPanel();
+        _panelChild = new DPanel();
         _panelChild.setLayout(gridLayout);
 
         /* Label */
-        _label = new JLabel("Wybierz parking, którym chcesz zarządzać: ", SwingConstants.CENTER);
+        _label = new DLabel("Wybierz parking, którym chcesz zarządzać: ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2, new Insets(10,0,0,0));
         _panelChild.add(_label, gridLayout.getConstraints());
 
         /* ComboBox */
-        _comboBox = new JComboBox();
+        _comboBox = new DComboBox();
         for (Parking parking : parkings) {
             _comboBox.addItem(parking.getParkingName());
         }
@@ -133,14 +135,14 @@ public class Default extends GUIManager implements ActionListener {
         _panelChild.add(_comboBox, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Zatwierdź");
+        _button = new DButton("Zatwierdź");
         _button.addActionListener(this);
         _button.setActionCommand("selectParking");
         gridLayout.setConstraints(0, 2);
         _panelChild.add(_button, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Dodaj nowy parking");
+        _button = new DButton("Dodaj nowy parking");
         _button.addActionListener(this);
         _button.setActionCommand("returnToAddMode");
         gridLayout.setConstraints(0, 3, new Insets(100,0,0,0));
@@ -181,7 +183,7 @@ public class Default extends GUIManager implements ActionListener {
      */
     public void throwVisibleError(String text) {
         if (_panelChild.isAncestorOf(_error)) _panelChild.remove(_error);
-        _error = new JLabel();
+        _error = new DLabel();
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);

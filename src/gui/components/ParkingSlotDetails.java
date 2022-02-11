@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.ParkingSlotReservationController;
@@ -31,11 +32,11 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
 
     private GridLayout gridLayout;
 
-    private JFrame _frame;
-    private JLabel _label;
-    private JTextField _textField;
-    private JButton _button;
-    private JLabel _error;
+    private DFrame _frame;
+    private DLabel _label;
+    private DTextField _textField;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create component for undefined parking slot
@@ -69,7 +70,7 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
      */
     public void renderFrame(String title) {
         gridLayout = new GridLayout();
-        _frame = new JFrame();
+        _frame = new DFrame();
         _frame.setTitle(title);
         _frame.setSize(450, 250);
         _frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -89,23 +90,23 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
      */
     public void renderCreateModal() {
         /* Label */
-        _label = new JLabel("Utwórz miejsce parkingowe: ", SwingConstants.CENTER);
+        _label = new DLabel("Utwórz miejsce parkingowe: ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 2);
         _frame.add(_label, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Numer miejsca parkingowego: ", SwingConstants.LEFT);
+        _label = new DLabel("Numer miejsca parkingowego: ", SwingConstants.LEFT);
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
-        _textField.setPreferredSize(new Dimension(50, 25));
+        _textField = new DTextField();
+        _textField.setPreferredSize(new Dimension(100, 25));
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
         _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Dodaj");
+        _button = new DButton("Dodaj");
         _button.addActionListener(this);
         _button.setActionCommand("addSlot");
         gridLayout.setConstraints(0, 2, 2, new Insets(20,0,0,0));
@@ -118,31 +119,31 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
      */
     public void renderEditModal() {
         /* Label */
-        _label = new JLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
+        _label = new DLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 3);
         _frame.add(_label, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Pojazd do zaparkowania: ", SwingConstants.LEFT);
+        _label = new DLabel("Pojazd do zaparkowania: ", SwingConstants.LEFT);
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.setPreferredSize(new Dimension(150, 25));
         _textField.setEditable(false);
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
         _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("wybierz...");
+        _button = new DButton("secondary", "wybierz...");
         _button.addActionListener(this);
         _button.setActionCommand("chooseVehicle");
         gridLayout.setConstraints(2, 1, new Insets(20, 10, 0, 0));
         _frame.add(_button, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Dodaj");
+        _button = new DButton("Dodaj");
         _button.addActionListener(this);
         _button.setActionCommand("addSlotReservation");
         gridLayout.setConstraints(0, 2, 3, new Insets(20,0,0,0));
@@ -158,17 +159,17 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
         Vehicle vehicle = VehicleController.getInstance().getOne(parkingSlotReservation.getVehicleId());
 
         /* Label */
-        _label = new JLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
+        _label = new DLabel("Miejsce parkingowe nr " + slot.getSlotNumber() + ": ", SwingConstants.CENTER);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, 0, 3);
         _frame.add(_label, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Zaparkowany pojazd: ", SwingConstants.LEFT);
+        _label = new DLabel("Zaparkowany pojazd: ", SwingConstants.LEFT);
         gridLayout.setConstraints(0, 1, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.setPreferredSize(new Dimension(150, 25));
         _textField.setEditable(false);
         _textField.setText(vehicle.getProducer() + " " + vehicle.getModel() + " - " + vehicle.getNumberPlate());
@@ -176,7 +177,7 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
         _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Wyparkuj");
+        _button = new DButton("Wyparkuj");
         _button.addActionListener(this);
         _button.setActionCommand("deleteSlotReservation");
         gridLayout.setConstraints(0, 2, 3, new Insets(20,0,0,0));
@@ -229,7 +230,7 @@ public class ParkingSlotDetails extends GUIManager implements ActionListener {
      */
     public void throwVisibleError(String text) {
         if (_frame.isAncestorOf(_error)) _frame.remove(_error);
-        _error = new JLabel();
+        _error = new DLabel();
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);

@@ -1,5 +1,6 @@
 package gui.views;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import gui.components.ParkingSlotDetails;
@@ -18,9 +19,9 @@ public class Parking extends GUIManager implements ActionListener {
 
     private ParkingSlots parkingSlotsComponent;
 
-    private JPanel _panel;
-    private JToolBar _toolBar;
-    private JButton _button;
+    private DPanel _panel;
+    private DToolBar _toolBar;
+    private DButton _button;
 
     /**
      * Create view for parking
@@ -34,33 +35,34 @@ public class Parking extends GUIManager implements ActionListener {
     /**
      * Get view of parking
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getView() { return _panel; }
+    public DPanel getView() { return _panel; }
 
     /**
      * Render and mount panel for parking view
      *
      */
     public void renderPanel() {
-        _panel = new JPanel();
+        _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
 
         /* Toolbar */
-        _toolBar = new JToolBar();
+        _toolBar = new DToolBar();
         _toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
         _toolBar.setFloatable(false);
         _panel.add(_toolBar);
 
         /* Button */
-        _button = new JButton("Zaparkuj pojazd");
+        _button = new DButton("secondary", "Zaparkuj pojazd");
         _button.setFocusable(false);
         _button.addActionListener(this);
         _button.setActionCommand("parkVehicle");
         _toolBar.add(_button);
+        _toolBar.addSeparator(new Dimension(5, 0));
 
         /* Button */
-        _button = new JButton("Utwórz nowe miejsce parkingowe");
+        _button = new DButton("secondary", "Utwórz nowe miejsce parkingowe");
         _button.setFocusable(false);
         _button.addActionListener(this);
         _button.setActionCommand("createSlot");

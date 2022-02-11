@@ -1,5 +1,6 @@
 package gui.views;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import gui.components.VehicleList;
@@ -15,9 +16,9 @@ public class Vehicles extends GUIManager implements ActionListener {
 
     private VehicleList vehicleListComponent;
 
-    private JPanel _panel;
-    private JToolBar _toolBar;
-    private JButton _button;
+    private DPanel _panel;
+    private DToolBar _toolBar;
+    private DButton _button;
 
     /**
      * Create view for vehicles
@@ -31,9 +32,9 @@ public class Vehicles extends GUIManager implements ActionListener {
     /**
      * Get view of vehicles
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getView() {
+    public DPanel getView() {
         return _panel;
     }
 
@@ -42,24 +43,25 @@ public class Vehicles extends GUIManager implements ActionListener {
      *
      */
     private void renderPanel() {
-        _panel = new JPanel();
+        _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
 
         /* Toolbar */
-        _toolBar = new JToolBar();
+        _toolBar = new DToolBar();
         _toolBar.setAlignmentX(Component.LEFT_ALIGNMENT);
         _toolBar.setFloatable(false);
         _panel.add(_toolBar);
 
         /* Button */
-        _button = new JButton("Dodaj pojazd");
+        _button = new DButton("secondary", "Dodaj pojazd");
         _button.setFocusable(false);
         _button.addActionListener(this);
         _button.setActionCommand("addVehicle");
         _toolBar.add(_button);
+        _toolBar.addSeparator(new Dimension(5, 0));
 
         /* Button */
-        _button = new JButton("Wyszukiwanie pojazdów");
+        _button = new DButton("secondary", "Wyszukiwanie pojazdów");
         _button.setFocusable(false);
         _button.addActionListener(this);
         _button.setActionCommand("findVehicle");

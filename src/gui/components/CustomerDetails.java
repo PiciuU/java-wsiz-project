@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.CustomerController;
@@ -21,13 +22,13 @@ public class CustomerDetails extends GUIManager implements ActionListener {
 
     private GridLayout gridLayout;
 
-    private ArrayList<JTextField> formInputs = new ArrayList<JTextField>();
+    private ArrayList<DTextField> formInputs = new ArrayList<DTextField>();
 
-    private JFrame _frame;
-    private JLabel _label;
-    private JTextField _textField;
-    private JButton _button;
-    private JLabel _error;
+    private DFrame _frame;
+    private DLabel _label;
+    private DTextField _textField;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create component for undefined customer
@@ -58,7 +59,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
      */
     public void renderFrame(String title) {
         gridLayout = new GridLayout();
-        _frame = new JFrame();
+        _frame = new DFrame();
         _frame.setTitle(title);
         _frame.setSize(450, 300);
         _frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -82,7 +83,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
         renderInputField("Numer telefonu", "contact_number", "", 2);
 
         /* Button */
-        _button = new JButton("Dodaj");
+        _button = new DButton("Dodaj");
         _button.addActionListener(this);
         _button.setActionCommand("addCustomer");
         gridLayout.setConstraints(0, 3, 2, new Insets(20, 0, 0, 0));
@@ -99,7 +100,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
         renderInputField("Numer telefonu", "contact_number", customer.getContactNumber(), 2);
 
         /* Button */
-        _button = new JButton("Zapisz zmiany");
+        _button = new DButton("Zapisz zmiany");
         _button.addActionListener(this);
         _button.setActionCommand("saveCustomer");
         gridLayout.setConstraints(0, 3, 2, new Insets(20, 0, 0, 0));
@@ -112,12 +113,12 @@ public class CustomerDetails extends GUIManager implements ActionListener {
      */
     private void renderInputField(String text, String column_name, String column_value, int gridy) {
         /* Label */
-        _label = new JLabel(text + ": ", SwingConstants.LEFT);
+        _label = new DLabel(text + ": ", SwingConstants.LEFT);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, gridy, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.putClientProperty(column_name, column_value);
         _textField.setText(_textField.getClientProperty(column_name).toString());
         _textField.setPreferredSize(new Dimension(250, 25));
@@ -137,7 +138,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
         String action = e.getActionCommand();
 
         if (action.equals("saveCustomer")) {
-            for (JTextField input: formInputs) {
+            for (DTextField input: formInputs) {
                 if (input.getText().isEmpty()) {
                     throwVisibleError("Aby zapisać zmiany wszystkie pola muszą być uzupełnione!");
                     return;
@@ -148,7 +149,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
             customEvent.reloadContent();
         }
         else if (action.equals("addCustomer")) {
-            for (JTextField input: formInputs) {
+            for (DTextField input: formInputs) {
                 if (input.getText().isEmpty()) {
                     throwVisibleError("Aby dodać nowego klienta wszystkie pola muszą być uzupełnione!");
                     return;
@@ -166,7 +167,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
      * @return A string with value of input or null value
      */
     public String getValueOfProperty(String key) {
-        for (JTextField input : formInputs) {
+        for (DTextField input : formInputs) {
             if (input.getClientProperty(key) != null) return input.getText();
         }
         return null;
@@ -179,7 +180,7 @@ public class CustomerDetails extends GUIManager implements ActionListener {
      */
     public void throwVisibleError(String text) {
         if (_frame.isAncestorOf(_error)) _frame.remove(_error);
-        _error = new JLabel();
+        _error = new DLabel();
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);

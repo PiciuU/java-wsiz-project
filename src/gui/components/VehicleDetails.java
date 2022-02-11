@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.CustomerController;
@@ -24,13 +25,13 @@ public class VehicleDetails extends GUIManager implements ActionListener {
 
     private GridLayout gridLayout;
 
-    private ArrayList<JTextField> formInputs = new ArrayList<JTextField>();
+    private ArrayList<DTextField> formInputs = new ArrayList<DTextField>();
 
-    private JFrame _frame;
-    private JLabel _label;
-    private JTextField _textField;
-    private JButton _button;
-    private JLabel _error;
+    private DFrame _frame;
+    private DLabel _label;
+    private DTextField _textField;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create component for undefined vehicle details
@@ -63,7 +64,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      */
     public void renderFrame(String title) {
         gridLayout = new GridLayout();
-        _frame = new JFrame();
+        _frame = new DFrame();
         _frame.setTitle(title);
         _frame.setSize(450, 450);
         _frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -83,12 +84,12 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      */
     public void renderCreateContent() {
         /* Label */
-        _label = new JLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
+        _label = new DLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
         gridLayout.setConstraints(0, 0, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.putClientProperty("customer", "");
         _textField.setPreferredSize(new Dimension(150, 25));
         _textField.setEditable(false);
@@ -96,7 +97,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("zmień...");
+        _button = new DButton("secondary","zmień...");
         _button.addActionListener(this);
         _button.setActionCommand("chooseCustomer");
         gridLayout.setConstraints(3, 0, 1, new Insets(20, 10, 0, 0));
@@ -109,7 +110,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         renderInputField("Tablica rejestracyjna", "number_plate", "", 5);
 
         /* Button */
-        _button = new JButton("Dodaj");
+        _button = new DButton("Dodaj");
         _button.addActionListener(this);
         _button.setActionCommand("addVehicle");
         gridLayout.setConstraints(0, 6, 4, new Insets(20, 0, 0, 0));
@@ -122,21 +123,21 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      */
     public void renderEditContent() {
         /* Label */
-        _label = new JLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
+        _label = new DLabel("Właściciel pojazdu: ", SwingConstants.LEFT);
         gridLayout.setConstraints(0, 0, 1, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.putClientProperty("customer", customer);
         _textField.setText(customer.getFirstname() + " " + customer.getSurname());
         _textField.setPreferredSize(new Dimension(150, 25));
         _textField.setEditable(false);
-        gridLayout.setConstraints(1, 0, 2, new Insets(20, 10, 0, 0));
+        gridLayout.setConstraints(1, 0, 2, new Insets(20, 17, 0, 0));
         _frame.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("zmień...");
+        _button = new DButton("secondary", "zmień...");
         _button.addActionListener(this);
         _button.setActionCommand("chooseCustomer");
         gridLayout.setConstraints(3, 0, 1, new Insets(20, 10, 0, 0));
@@ -149,7 +150,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
         renderInputField("Tablica rejestracyjna", "number_plate", vehicle.getNumberPlate(), 5);
 
         /* Button */
-        _button = new JButton("Zapisz zmiany");
+        _button = new DButton("Zapisz zmiany");
         _button.addActionListener(this);
         _button.setActionCommand("saveVehicle");
         gridLayout.setConstraints(0, 6, 4, new Insets(20, 0, 0, 0));
@@ -162,12 +163,12 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      */
     private void renderInputField(String text, String column_name, String column_value, int gridy) {
         /* Label */
-        _label = new JLabel(text + ": ", SwingConstants.LEFT);
+        _label = new DLabel(text + ": ", SwingConstants.LEFT);
         gridLayout.setConstraints(GridBagConstraints.HORIZONTAL, 0, gridy, 2, new Insets(20,0,0,0));
         _frame.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.putClientProperty(column_name, column_value);
         _textField.setText(_textField.getClientProperty(column_name).toString());
         _textField.setPreferredSize(new Dimension(150, 25));
@@ -185,12 +186,12 @@ public class VehicleDetails extends GUIManager implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String action = e.getActionCommand();
-        
+
         if (action.equals("chooseCustomer")) {
             new CustomerListModal(new CustomEvent());
         }
         else if (action.equals("saveVehicle")) {
-            for (JTextField input: formInputs) {
+            for (DTextField input: formInputs) {
                 if (input.getText().isEmpty()) {
                     throwVisibleError("Aby zapisać zmiany wszystkie pola muszą być uzupełnione!");
                     return;
@@ -205,7 +206,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
                 throwVisibleError("Aby dodać nowy pojazd musi zostać wybrany właściciel pojazdu!");
                 return;
             }
-            for (JTextField input: formInputs) {
+            for (DTextField input: formInputs) {
                 if (input.getText().isEmpty()) {
                     throwVisibleError("Aby dodać nowy pojazd wszystkie pola muszą być uzupełnione!");
                     return;
@@ -223,7 +224,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      * @return A string with value of input or null value
      */
     public String getValueOfProperty(String key) {
-        for (JTextField input : formInputs) {
+        for (DTextField input : formInputs) {
             if (input.getClientProperty(key) != null) return input.getText();
         }
         return null;
@@ -236,7 +237,7 @@ public class VehicleDetails extends GUIManager implements ActionListener {
      */
     public void throwVisibleError(String text) {
         if (_frame.isAncestorOf(_error)) _frame.remove(_error);
-        _error = new JLabel();
+        _error = new DLabel();
         _error.setText(Prettier.renderText(text, "text-align:center;"));
         _error.setForeground(Color.red);
         _error.setHorizontalAlignment(SwingConstants.CENTER);
@@ -256,8 +257,8 @@ public class VehicleDetails extends GUIManager implements ActionListener {
             if (getEnv().getEnvType() == "local") System.out.println("[VehicleDetails]CustomEvent::handleSelect");
             customer = (Customer) object;
             for(Component component : _frame.getRootPane().getContentPane().getComponents()) {
-                if (component instanceof JTextField && ((JTextField) component).getClientProperty("customer") != null) {
-                    ((JTextField) component).setText(customer.getFirstname() + " " + customer.getSurname());
+                if (component instanceof DTextField && ((DTextField) component).getClientProperty("customer") != null) {
+                    ((DTextField) component).setText(customer.getFirstname() + " " + customer.getSurname());
                 }
             }
         }

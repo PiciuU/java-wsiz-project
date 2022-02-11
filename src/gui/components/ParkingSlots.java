@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.ParkingSlotController;
@@ -10,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+import javax.swing.border.MatteBorder;
 
 import java.util.ArrayList;
 
@@ -19,10 +21,10 @@ public class ParkingSlots extends GUIManager implements ActionListener {
 
     protected ArrayList<ParkingSlot> parkingSlotsData;
 
-    private JPanel _panel;
-    private JScrollPane _scrollPane;
-    private JButton _button;
-    private ArrayList<JButton> _buttonArray = new ArrayList<JButton>();
+    private DPanel _panel;
+    private DScrollPane _scrollPane;
+    private DButton _button;
+    private ArrayList<DButton> _buttonArray = new ArrayList<DButton>();
 
     /**
      * Create component for parking slots
@@ -30,16 +32,16 @@ public class ParkingSlots extends GUIManager implements ActionListener {
      */
     public ParkingSlots(EventHandler customEvent) {
         this.customEvent = customEvent;
-        parkingSlotsData = ParkingSlotController.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId());
+        parkingSlotsData = ParkingSlotController.getInstance().getCustom("SELECT parking_slot.*, IIF(parking_slot_reservation.id NOT NULL, 1, 0) AS custom_field FROM parking_slot LEFT JOIN parking_slot_reservation ON parking_slot.id = parking_slot_reservation.parking_slot_id WHERE parking_slot.parking_id = " + getEnv().getParkingId() + " ORDER BY parking_slot.id");
         renderPanel();
     }
 
     /**
      * Get component of parking slots
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getComponent() {
+    public DPanel getComponent() {
         return _panel;
     }
 
@@ -57,8 +59,10 @@ public class ParkingSlots extends GUIManager implements ActionListener {
      *
      */
     public void renderPanel() {
-        _panel = new JPanel(new WrapLayout(FlowLayout.CENTER, 10, 10));
-        _scrollPane = new JScrollPane(_panel);
+        _panel = new DPanel();
+        _panel.setLayout(new WrapLayout(FlowLayout.CENTER, 10, 10));
+        _scrollPane = new DScrollPane(_panel);
+        _scrollPane.setBorder(new MatteBorder(2,0,0,0, Color.black));
         _scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         for (ParkingSlot slot : parkingSlotsData) {
@@ -73,8 +77,7 @@ public class ParkingSlots extends GUIManager implements ActionListener {
      *
      */
     public void renderButton(ParkingSlot slot, String text, String name) {
-        _button = new JButton();
-        _button.setText(Prettier.renderText(text, "text-align:center"));
+        _button = new DButton("secondary", Prettier.renderText(text, "text-align:center"));
         _button.setName(name);
         _button.addActionListener(this);
         _button.setPreferredSize(new Dimension(150, 100));

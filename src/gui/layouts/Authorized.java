@@ -1,16 +1,18 @@
 package gui.layouts;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import gui.views.*;
 
 import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.Border;
 
 public class Authorized extends GUIManager {
 
-    private JPanel _panel;
-    private JTabbedPane _tabbedPane;
+    private DPanel _panel;
+    private DTabbedPane _tabbedPane;
 
     private Parking _parkingTab;
     private Vehicles _vehiclesTab;
@@ -38,13 +40,15 @@ public class Authorized extends GUIManager {
      *
      */
     public void renderPanel() {
-        _panel = new JPanel(new BorderLayout());
+        _panel = new DPanel();
+        _panel.setLayout(new BorderLayout());
         _parkingTab = new Parking();
         _vehiclesTab = new Vehicles();
         _customersTab = new Customers();
 
         /* Tabbed Pane */
-        _tabbedPane = new JTabbedPane();
+        UIManager.put("TabbedPane.selected", new Color(0x0078d7));
+        _tabbedPane = new DTabbedPane();
         _tabbedPane.addTab("Parking", _parkingTab.getView());
         _tabbedPane.addTab("Pojazdy", _vehiclesTab.getView());
         _tabbedPane.addTab("Klienci", _customersTab.getView());

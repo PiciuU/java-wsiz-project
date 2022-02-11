@@ -1,9 +1,11 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.VehicleController;
 
+import gui.views.Vehicles;
 import models.Vehicle;
 
 import java.awt.*;
@@ -23,20 +25,20 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
 
     private GridLayout gridLayout;
 
-    private ArrayList<JTextField> formInputs = new ArrayList<JTextField>();
+    private ArrayList<DTextField> formInputs = new ArrayList<DTextField>();
 
-    private JFrame _frame;
-    private JPanel _panel;
-    private JScrollPane _scrollPane;
+    private DFrame _frame;
+    private DPanel _panel;
+    private DScrollPane _scrollPane;
 
     private DefaultListModel _listModel;
-    private JList _list;
-    private JLabel _label;
-    private JComboBox _comboBoxFilter;
-    private JComboBox _comboBoxSort;
-    private JTextField _textField;
-    private JButton _button;
-    private JLabel _error;
+    private DList _list;
+    private DLabel _label;
+    private DComboBox _comboBoxFilter;
+    private DComboBox _comboBoxSort;
+    private DTextField _textField;
+    private DButton _button;
+    private DLabel _error;
 
     /**
      * Create component for vehicle search modal
@@ -56,7 +58,7 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
      */
     public void renderFrame(String title) {
         gridLayout = new GridLayout();
-        _frame = new JFrame();
+        _frame = new DFrame();
         _frame.setTitle(title);
         _frame.setSize(500, 450);
         _frame.addWindowListener(new java.awt.event.WindowAdapter() {
@@ -75,16 +77,17 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
      *
      */
     public void renderContent() {
-        _panel = new JPanel(gridLayout);
+        _panel = new DPanel();
+        _panel.setLayout(gridLayout);
 
         /* Label */
-        _label = new JLabel("Filtrowanie po: ");
+        _label = new DLabel("Filtrowanie po: ");
         gridLayout.setConstraints(0, 0);
         _panel.add(_label, gridLayout.getConstraints());
 
 
         /* _comboBoxFilter */
-        _comboBoxFilter = new JComboBox();
+        _comboBoxFilter = new DComboBox();
         _comboBoxFilter.addItem(new CustomItem("id", "identyfikatorze (domyślne)", "producer || ' ' || model || ' - ' || number_plate"));
         _comboBoxFilter.addItem(new CustomItem("producer", "producencie", "producer || ' ' || model"));
         _comboBoxFilter.addItem(new CustomItem("model", "modelu", "model || ' - ' || producer"));
@@ -95,39 +98,39 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
         _panel.add(_comboBoxFilter, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Sortowanie: ");
+        _label = new DLabel("Sortowanie: ");
         gridLayout.setConstraints(2, 0, new Insets(0, 15, 0, 0));
         _panel.add(_label, gridLayout.getConstraints());
 
 
         /* _comboBoxSort */
-        _comboBoxSort = new JComboBox();
+        _comboBoxSort = new DComboBox();
         _comboBoxSort.addItem(new CustomItem("asc", "rosnąco"));
         _comboBoxSort.addItem(new CustomItem("desc", "malejąco"));
         gridLayout.setConstraints(3, 0, new Insets(0, 5, 0,0));
         _panel.add(_comboBoxSort, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Szukana fraza: ");
+        _label = new DLabel("Szukana fraza: ");
         gridLayout.setConstraints(0, 1, new Insets(20, 0, 0, 0));
         _panel.add(_label, gridLayout.getConstraints());
 
         /* TextField */
-        _textField = new JTextField();
+        _textField = new DTextField();
         _textField.setPreferredSize(new Dimension(150, 25));
         gridLayout.setConstraints(1, 1, new Insets(20, 10, 0, 0));
         _panel.add(_textField, gridLayout.getConstraints());
 
         /* Button */
-        _button = new JButton("Wyszukaj");
+        _button = new DButton("Wyszukaj");
         _button.addActionListener(this);
         _button.setActionCommand("searchVehicles");
-        _button.setPreferredSize(new Dimension(150, 25));
+        _button.setPreferredSize(new Dimension(150, 30));
         gridLayout.setConstraints(2, 1, 2, new Insets(20, 10, 0, 0));
         _panel.add(_button, gridLayout.getConstraints());
 
         /* Label */
-        _label = new JLabel("Powyższa fraza wyszukiwana jest na podstawie wybranego filtru. ");
+        _label = new DLabel("Powyższa fraza wyszukiwana jest na podstawie wybranego filtru. ");
         _label.setFont(new Font("Arial", Font.PLAIN, 10));
         gridLayout.setConstraints(0, 2, 4, new Insets(5, 0, 0, 0));
         _panel.add(_label, gridLayout.getConstraints());
@@ -142,12 +145,12 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
     public void renderList() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
-        _list = new JList(_listModel);
+        _list = new DList(_listModel);
 
         listAction = new ListAction(_list, new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                JList list = (JList)e.getSource();
-                new VehicleDetails(customEvent, "Szczegóły pojazdu", vehiclesData.get(list.getSelectedIndex()));
+                DList list = (DList)e.getSource();
+                new VehicleDetails(new CustomEvent(), "Szczegóły pojazdu", vehiclesData.get(list.getSelectedIndex()));
             }
         });
 
@@ -156,7 +159,7 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
         }
 
         /* ScrollPane */
-        _scrollPane = new JScrollPane(_list);
+        _scrollPane = new DScrollPane(_list);
         _scrollPane.setPreferredSize(new Dimension(350, 200));
         gridLayout.setConstraints(0, 3, 4, new Insets(10, 0, 0, 0));
         _panel.add(_scrollPane, gridLayout.getConstraints());
@@ -186,7 +189,25 @@ public class VehicleSearchModal extends GUIManager implements ActionListener {
     }
 
     /**
-     * Custom inner class for defining items in fitler and search modal
+     * Custom events handled by GUIManager EventHandler
+     *
+     */
+    class CustomEvent extends EventHandler {
+        @Override
+        public void disposeFrame(JFrame frame) {
+            if (getEnv().getEnvType() == "local") System.out.println("[VehicleSearchModal]CustomEvent::disposeFrame");
+            frame.dispose();
+        }
+
+        @Override
+        public void reloadContent() {
+            if (getEnv().getEnvType() == "local") System.out.println("[VehicleSearchModal]CustomEvent::reloadComponent");
+            actionPerformed(new ActionEvent("", 0, "searchVehicles"));
+        }
+    }
+
+    /**
+     * Custom inner class for defining items in filter and search modal
      *
      */
     class CustomItem {

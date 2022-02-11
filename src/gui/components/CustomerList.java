@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.CustomerController;
@@ -20,11 +21,11 @@ public class CustomerList extends GUIManager {
 
     private ArrayList<Customer> customersData;
 
-    private JPanel _panel;
-    private JScrollPane _scrollPane;
+    private DPanel _panel;
+    private DScrollPane _scrollPane;
 
     private DefaultListModel _listModel;
-    private JList _list;
+    private DList _list;
 
     /**
      * Create component for customers list
@@ -40,9 +41,9 @@ public class CustomerList extends GUIManager {
     /**
      * Get component of customers list
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getComponent() {
+    public DPanel getComponent() {
         return _panel;
     }
 
@@ -51,7 +52,7 @@ public class CustomerList extends GUIManager {
      *
      */
     public void renderPanel() {
-        _panel = new JPanel();
+        _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
     }
 
@@ -62,11 +63,11 @@ public class CustomerList extends GUIManager {
     public void renderList() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
-        _list = new JList(_listModel);
+        _list = new DList(_listModel);
 
         listAction = new ListAction(_list, new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                JList list = (JList)e.getSource();
+                DList list = (DList)e.getSource();
                 new CustomerDetails(customEvent, "Dane klienta", customersData.get(list.getSelectedIndex()));
             }
         });
@@ -76,9 +77,9 @@ public class CustomerList extends GUIManager {
         }
 
         /* ScrollPane */
-        _scrollPane = new JScrollPane(_list);
+        _scrollPane = new DScrollPane(_list);
         _scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        _scrollPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        _scrollPane.setBorder(BorderFactory.createMatteBorder(10,10,10,10, new Color(0x252525)));
         _panel.add(_scrollPane);
     }
 }

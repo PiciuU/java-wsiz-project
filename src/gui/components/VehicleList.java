@@ -1,5 +1,6 @@
 package gui.components;
 
+import gui.DreamFX.*;
 import gui.GUIManager;
 
 import database.controllers.VehicleController;
@@ -23,17 +24,16 @@ public class VehicleList extends GUIManager implements ActionListener {
 
     private String currentFilterValue;
 
-    private JPanel _panel;
-    private JPanel _innerPanel;
-    private JScrollPane _scrollPane;
-    private JLabel _label;
-    private JButton _button;
+    private DPanel _panel;
+    private DPanel _innerPanel;
+    private DScrollPane _scrollPane;
+    private DLabel _label;
 
-    private JRadioButton _radioButton;
+    private DRadioButton _radioButton;
     private ButtonGroup _buttonGroup;
 
     private DefaultListModel _listModel;
-    private JList _list;
+    private DList _list;
 
     /**
      * Create component for vehicle list
@@ -69,18 +69,18 @@ public class VehicleList extends GUIManager implements ActionListener {
     /**
      * Get component of vehicle list
      *
-     * @return JPanel
+     * @return DPanel
      */
-    public JPanel getComponent() {
+    public DPanel getComponent() {
         return _panel;
     }
 
     /**
      * Get scrollable component of vehicle list
      *
-     * @return JScrollPane
+     * @return DScrollPane
      */
-    public JScrollPane getComponentScrollable() {
+    public DScrollPane getComponentScrollable() {
         return _scrollPane;
     }
 
@@ -90,7 +90,7 @@ public class VehicleList extends GUIManager implements ActionListener {
      *
      */
     public void renderPanel() {
-        _panel = new JPanel();
+        _panel = new DPanel();
         _panel.setLayout(new BoxLayout(_panel, BoxLayout.PAGE_AXIS));
     }
 
@@ -99,30 +99,30 @@ public class VehicleList extends GUIManager implements ActionListener {
      *
      */
     public void renderFilterButtons() {
-        _innerPanel = new JPanel();
+        _innerPanel = new DPanel();
         _innerPanel.setLayout(new BoxLayout(_innerPanel, BoxLayout.LINE_AXIS));
         _innerPanel.setBorder(BorderFactory.createEmptyBorder(10,10,0,0));
         _innerPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         /* Label */
-        _label = new JLabel("Filtry wyszukiwania: ", SwingConstants.LEFT);
+        _label = new DLabel("Filtry wyszukiwania: ", SwingConstants.LEFT);
         _innerPanel.add(_label);
 
         _buttonGroup = new ButtonGroup();
 
-        _radioButton = new JRadioButton("Wszystkie pojazdy", currentFilterValue == "all_vehicles");
+        _radioButton = new DRadioButton("Wszystkie pojazdy", currentFilterValue == "all_vehicles");
         _radioButton.setActionCommand("all_vehicles");
         _radioButton.addActionListener(this);
         _buttonGroup.add(_radioButton);
         _innerPanel.add(_radioButton);
 
-        _radioButton = new JRadioButton("Zaparkowane pojazdy", currentFilterValue == "parked_vehicles");
+        _radioButton = new DRadioButton("Zaparkowane pojazdy", currentFilterValue == "parked_vehicles");
         _radioButton.setActionCommand("parked_vehicles");
         _radioButton.addActionListener(this);
         _buttonGroup.add(_radioButton);
         _innerPanel.add(_radioButton);
 
-        _radioButton = new JRadioButton("Wolne pojazdy", currentFilterValue == "free_vehicles");
+        _radioButton = new DRadioButton("Wolne pojazdy", currentFilterValue == "free_vehicles");
         _radioButton.setActionCommand("free_vehicles");
         _radioButton.addActionListener(this);
         _buttonGroup.add(_radioButton);
@@ -138,11 +138,11 @@ public class VehicleList extends GUIManager implements ActionListener {
     public void renderList() {
         /* ListModel and List */
         _listModel = new DefaultListModel();
-        _list = new JList(_listModel);
+        _list = new DList(_listModel);
 
         listAction = new ListAction(_list, new AbstractAction() {
             public void actionPerformed(ActionEvent e) {
-                JList list = (JList)e.getSource();
+                DList list = (DList)e.getSource();
                 new VehicleDetails(customEvent, "Szczegóły pojazdu", vehiclesData.get(list.getSelectedIndex()));
             }
         });
@@ -152,9 +152,9 @@ public class VehicleList extends GUIManager implements ActionListener {
         }
 
         /* ScrollPane */
-        _scrollPane = new JScrollPane(_list);
+        _scrollPane = new DScrollPane(_list);
         _scrollPane.setAlignmentX(Component.LEFT_ALIGNMENT);
-        _scrollPane.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        _scrollPane.setBorder(BorderFactory.createMatteBorder(10,10,10,10, new Color(0x252525)));
         _panel.add(_scrollPane);
     }
 
@@ -183,6 +183,13 @@ public class VehicleList extends GUIManager implements ActionListener {
             _panel.updateUI();
         }
     }
+
+    class ExtendedCustomEvent extends EventHandler {
+        public ExtendedCustomEvent() {
+
+        }
+    }
+
 
     /**
      * Handle the requested action
